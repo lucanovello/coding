@@ -1,0 +1,127 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: grab;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  padding: 10%;
+  background: radial-gradient(hsl(204, 0%, 15%), hsl(204, 5%, 10%));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.face {
+  min-width: 800px;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 600px;
+  height: 100vh;
+  max-height: 700px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 50%;
+}
+
+.eyes {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10%;
+}
+.face:hover > .eyes > .outer {
+  border-top: 70px solid rgb(254, 203, 0);
+  border-bottom: 40px solid rgb(254, 203, 0);
+  z-index: 999;
+}
+.outer {
+  width: 40%;
+  aspect-ratio: 1;
+  background: radial-gradient(white 40%, rgb(74, 7, 7));
+  /*   background: white; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border-top: 60px solid rgb(254, 203, 0);
+  border-bottom: 5px solid rgb(254, 203, 0);
+  overflow: hidden;
+  box-shadow: 0 15px 10px 1px rgba(0, 0, 0, 0.6);
+  transition: 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.outer:hover {
+  border-top: 100px solid rgb(254, 203, 0) !important;
+  border-bottom: 100px solid rgb(254, 203, 0) !important;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.inner {
+  width: 15%;
+  aspect-ratio: 1;
+  background: radial-gradient(hsl(20, 70%, 30%), hsl(20, 70%, 10%));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9;
+  border: 2px solid black;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: inset 0px 1px 2px hsla(25, 80%, 60%, 0.5),
+    inset 0px -1px 2px hsla(25, 80%, 0%, 0.7);
+  transition: 0.13s ease;
+}
+
+.pupilL,
+.pupilR {
+  width: 50%;
+  aspect-ratio: 1;
+  position: absolute;
+  background: black;
+  border-radius: 50%;
+}
+
+.reflectionL,
+.reflectionR {
+  width: 20%;
+  aspect-ratio: 1;
+  background: white;
+  border-radius: 50%;
+  position: relative;
+  top: -15%;
+  right: 15%;
+  border: 1px solid black;
+  transition: 100ms ease;
+}
+.mouth {
+  width: 10%;
+  height: 1%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  top: 70px;
+  justify-self: flex-end;
+  background: radial-gradient(#101010, black);
+  border: 15px solid rgb(254, 203, 0);
+  border-radius: 20vw;
+  box-shadow: 0 10px 7px black;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.13s cubic-bezier(0.175, 0.885, 0.32, 2);
+}
+.mouth:hover {
+  width: 15%;
+  height: 25%;
+  background: radial-gradient(#101010, black);
+}

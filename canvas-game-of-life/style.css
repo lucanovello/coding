@@ -1,0 +1,447 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* font-family: 'Poppins', sans-serif; */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+/* font-family: 'Roboto', sans-serif; */
+
+:root {
+    --btn-cont-height: calc(40px + 3vh);
+    --border-radius: 0.5em;
+    --transition: 0.2s ease;
+    --transition-btn: 0.05s linear;
+    --main-color: hsla(200, 80%, 50%, 1);
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overscroll-behavior: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-appearance: none;
+    touch-action: manipulation;
+    border-color: black;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background: white;
+    /* background: radial-gradient(
+            ellipse at 12% 87%,
+            hsla(205, 100%, 70%, 1),
+            hsla(220, 100%, 35%, 0.1)
+        ),
+        radial-gradient(circle at 0% 12%, hsla(160, 80%, 50%, 1), hsla(170, 80%, 30%, 0.1)),
+        radial-gradient(circle at 99% 99%, hsla(175, 80%, 50%, 1), hsla(185, 80%, 30%, 0.1)),
+        radial-gradient(circle at 10% 50%, hsla(190, 80%, 50%, 1), hsla(200, 80%, 30%, 0.1)),
+        radial-gradient(circle at 32% 68%, hsla(205, 80%, 50%, 1), hsla(216, 80%, 30%, 0.1)),
+        radial-gradient(circle at 68% 32%, hsla(220, 80%, 50%, 1), hsla(230, 80%, 30%, 0.1)); */
+}
+
+canvas {
+    position: fixed;
+    cursor: crosshair;
+    background: none;
+}
+
+button {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-container {
+    width: 100%;
+    height: var(--btn-cont-height);
+    padding: 1vh 3%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    letter-spacing: 0.02em;
+    background: hsla(0, 0%, 0%, 0.1);
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.3);
+    cursor: pointer;
+    box-shadow: 0 3px 3px hsla(0, 0%, 50%, 0.5);
+    transition: var(--transition);
+    z-index: 99;
+}
+.btn-container:hover {
+    background: hsla(0, 0%, 0%, 0.9);
+}
+
+.btn-wrapper-left-wrapper {
+    width: 15%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition);
+}
+
+.btn-wrapper-left {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-wrapper-mid {
+    width: 70%;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    letter-spacing: 0.02em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    row-gap: 0.2em;
+}
+.btn-wrapper-mid:focus {
+    appearance: none;
+}
+
+.btn-wrapper-right {
+    width: 15vw;
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.fps-wrapper {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: flex-start;
+    transition: var(--transition);
+}
+
+#fps {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: flex-start;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    color: lime;
+    background: hsla(0, 0%, 0%, 0.8);
+    border: none;
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    user-select: none;
+    -webkit-user-select: none;
+    transition: var(--transition);
+}
+
+.btn-container:hover #fps {
+    width: 100%;
+    height: 100%;
+    transition: var(--transition);
+}
+#fps:hover {
+    border: 1px solid lime;
+}
+#fps:focus {
+    border: 1px solid lime;
+}
+
+#fps::-webkit-outer-spin-button,
+#fps::-webkit-inner-spin-button,
+input[type='number'] {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#btn-up,
+#btn-down,
+#pause {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: hsl(210, 5%, 20%);
+    z-index: 99;
+    cursor: inherit;
+    border: 1px solid black;
+    box-shadow: inset 1px 1px 2px hsla(0, 0%, 50%, 0.3), inset -1px -1px 2px hsla(0, 0%, 0%, 0.3);
+    transition: var(--transition-btn);
+}
+
+.btn-container:hover #btn-up,
+.btn-container:hover #btn-down,
+.btn-container:hover #pause {
+    transition: var(--transition);
+}
+
+#btn-down {
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
+
+#btn-up:hover,
+#btn-down:hover,
+#pause:hover {
+    background: hsl(205, 5%, 35%);
+}
+
+#btn-up:active,
+#btn-down:active,
+#pause:active {
+    background: hsl(200, 5%, 5%);
+    box-shadow: inset -1px -2px 2px hsla(0, 0%, 100%, 0.5), inset 1px 1px 2px hsla(0, 0%, 0%, 0.5);
+}
+
+.btn-icon,
+#pause-icon {
+    font-size: 14px;
+    font-weight: 900;
+    text-align: center;
+    color: #242424;
+}
+
+/********** ZOOM SLIDER **********/
+.zoom-wrapper {
+    width: 100%;
+}
+#zoom-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+/*Range Reset*/
+#zoom {
+    width: 50%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+/* Removes default focus */
+#zoom:focus {
+    outline: none;
+    transition: var(--transition-btn);
+}
+
+/* slider track */
+#zoom::-webkit-slider-runnable-track {
+    background: hsla(205, 90%, 100%, 0.5);
+    height: 0.25em;
+}
+#zoom::-moz-range-track {
+    background: hsla(205, 90%, 100%, 0.5);
+    height: 0.25em;
+}
+/* slider thumb */
+#zoom::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    margin-top: -0.875em; /* Centers thumb on the track */
+    background: hsla(205, 90%, 40%, 1);
+    border-radius: var(--border-radius);
+    height: 2em;
+    width: 2em;
+    border: 2px solid hsla(200, 60%, 60%, 1);
+}
+#zoom::-moz-range-thumb {
+    border: none; /*Removes extra border that FF applies*/
+    border-radius: 0; /*Removes default border-radius that FF applies*/
+    background: hsla(205, 90%, 40%, 1);
+    border-radius: var(--border-radius);
+    height: 2em;
+    width: 2em;
+    border: 2px solid hsla(200, 60%, 60%, 1);
+}
+#zoom:hover::-webkit-slider-thumb {
+    border: 2px solid hsla(45, 90%, 50%, 1);
+}
+
+#zoom:hover::-moz-range-thumb {
+    border: 2px solid hsla(45, 90%, 50%, 1);
+}
+#zoom:focus::-webkit-slider-thumb {
+    border: 2px solid hsla(45, 90%, 50%, 1);
+}
+
+#zoom:focus::-moz-range-thumb {
+    border: 2px solid hsla(45, 90%, 50%, 1);
+}
+#zoom:active::-webkit-slider-thumb {
+    border: 3px solid hsl(45, 90%, 50%);
+}
+
+#zoom:active::-moz-range-thumb {
+    border: 3px solid hsl(45, 90%, 50%);
+}
+
+#reset,
+#clear {
+    width: 100%;
+    min-width: 10vw;
+    height: 100%;
+    padding: 0.1em 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: calc(6px + 0.5vw);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: hsl(0, 0%, 80%);
+    border: 1px solid black;
+    cursor: pointer;
+    transition: var(--transition-btn);
+    box-shadow: inset -1px -2px 1px hsla(0, 0%, 0%, 0.2), inset 1px 2px 1px hsla(0, 0%, 100%, 0.2);
+}
+
+#reset {
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    background: hsl(90, 20%, 30%);
+}
+#clear {
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    background: hsl(0, 20%, 30%);
+}
+
+#reset:hover,
+#clear:hover {
+    color: white;
+    border: 1px solid white;
+    box-shadow: inset -1px -2px 2px hsla(0, 0%, 100%, 0.5), inset 1px 2px 2px hsla(0, 0%, 0%, 0.5);
+}
+
+#reset:active,
+#clear:active {
+    color: white;
+    border: 1px solid white;
+    box-shadow: inset -1px -2px 2px hsla(0, 0%, 100%, 0.5), inset 1px 2px 2px hsla(0, 0%, 0%, 0.5);
+}
+
+#reset:hover {
+    background: hsl(90, 80%, 40%);
+}
+
+#clear:hover {
+    background: hsl(0, 80%, 40%);
+}
+
+#reset:active {
+    background: hsl(90, 100%, 55%);
+}
+#clear:active {
+    background: hsl(0, 100%, 55%);
+}
+
+@media (max-width: 900px) {
+    .btn-container {
+        height: var(--btn-cont-height);
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        background: hsla(0, 0%, 0%, 0.8);
+        box-shadow: 0 -3px 3px hsla(0, 0%, 50%, 0.5);
+        column-gap: 2vw;
+    }
+
+    .btn-wrapper-left-wrapper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .btn-wrapper-left {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .btn-wrapper-mid {
+        width: 25%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        position: relative;
+        background: hsla(0, 0%, 0%, 0.8);
+        border-radius: var(--border-radius);
+        z-index: 99;
+    }
+    .zoom-wrapper {
+        width: 0vh;
+        height: 100%;
+        padding: 1.5vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+        background: hsla(0, 0%, 0%, 0.8);
+        filter: opacity(0);
+    }
+    .btn-wrapper-mid:active .zoom-wrapper,
+    .btn-wrapper-mid:hover .zoom-wrapper {
+        width: 30vh;
+        height: 100%;
+        padding: 3vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        bottom: calc(var(--btn-cont-height) * 2.25);
+        background: hsla(0, 0%, 0%, 0.8);
+        transform: rotate(-90deg);
+        filter: opacity(1);
+    }
+
+    #zoom {
+        width: 100%;
+        cursor: pointer;
+    }
+    #zoom-label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 900;
+        color: white;
+    }
+
+    .btn-wrapper-right {
+        width: 40%;
+        height: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+}

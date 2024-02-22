@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Asteroids</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div class="start-screen" id="start-screen">
+      <h1 id="title">METEOROID</h1>
+      <h3 id="press-start">Press Enter</h3>
+    </div>
+    <div class="score-board">
+      <h2 id="score"></h2>
+      <h2 id="high-score"></h2>
+      <h3 id="high-score-span"></h3>
+      <button id="reset-score">Reset High Score</button>
+      <button id="dev-tools">Dev Tools</button>
+    </div>
+    <div class="buttons disappear" id="buttons">
+      <button id="auto-run">Auto-Run</button>
+      <button id="auto-rotate">Auto-Rotation</button>
+      <button id="auto-shoot">Auto-Shoot</button>
+      <button id="show-collision">Show Collision</button>
+      <button id="wrap-lasers">Wrap Lasers</button>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

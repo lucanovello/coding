@@ -1,0 +1,61 @@
+/* VARIABLES */
+:root {
+    --navbar-header-height: 35px;
+    --navbar-height: 80px;
+    --navbar-menu-height: 40px;
+    --main-color: #242424;
+    --highlight-color: #bacedb;
+    --link-color: hsl(210, 100%, 40%);
+    --button-color: hsl(210, 100%, 15%);
+    --button-click-color: hsl(210, 91%, 25%);
+    --button-disabled-color: rgb(211, 223, 224);
+    --button-highlight-color: hsla(210, 40%, 75%, 0.6);
+    --dashed-border: 1px dashed white;
+    --cart-border-color: #d1d1d1;
+}
+
+/* FONTS */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* font-family: 'Poppins', sans-serif; */
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap');
+/* font-family: 'Abril Fatface', cursive; */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+/* font-family: 'Open Sans', sans-serif; */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+/* font-family: 'Josefin Sans', sans-serif; */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*:focus-visible {
+    outline-width: 1px;
+    outline-style: dashed;
+    outline-color: currentcolor;
+    border-radius: 1px;
+}
+
+button:focus-visible {
+    outline-width: 1px;
+    outline-style: dashed;
+    outline-color: var(--main-color);
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+        'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}

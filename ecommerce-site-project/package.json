@@ -1,0 +1,22 @@
+{
+    "name": "ecommerce-site-project",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "devDependencies": {},
+    "scripts": {
+        "build": "cd backend && npm install  && cd ../frontend && npm install && npm run build",
+        "start": "node backend/server.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lunovello/ecommerce-site-project.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/lunovello/ecommerce-site-project/issues"
+    },
+    "homepage": "https://github.com/lunovello/ecommerce-site-project#readme"
+}

@@ -1,0 +1,50 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overscroll-behavior: none;
+    user-select: none;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background: linear-gradient(#2a2a2a, #181818);
+}
+.btn-container {
+    padding: calc(5px + 2vw);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1vw;
+}
+
+.btn {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    transform: scale(1);
+    cursor: pointer;
+    transition: 0.02s ease-out;
+}
+
+.btn:active {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.btn-title {
+    font-size: 16px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+.btn-counter {
+    font-size: 16px;
+    font-weight: 400;
+}

@@ -1,0 +1,120 @@
+:root {
+  --shadow-size: 10px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.name {
+  width: 100%;
+  height: 50%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 5rem;
+  font-weight: 900;
+  text-transform: capitalize;
+  text-align: center;
+  /* -webkit-text-stroke-width: 1px; */
+  /* -webkit-text-stroke-color: rgba(255, 255, 255, 0.2); */
+  color: rgba(255, 255, 255, 0.05);
+  /* backdrop-filter: blur(5px); */
+  /* animation: shadows 3s linear infinite; */
+}
+
+@keyframes colors {
+  0% {
+    color: hsla(0, 100%, 50%, 1);
+  }
+  10% {
+    color: hsla(36, 100%, 50%, 1);
+  }
+  20% {
+    color: hsla(72, 100%, 50%, 1);
+  }
+  30% {
+    color: hsla(108, 100%, 50%, 1);
+  }
+  40% {
+    color: hsla(144, 100%, 50%, 1);
+  }
+  50% {
+    color: hsla(180, 100%, 50%, 1);
+  }
+  60% {
+    color: hsla(216, 100%, 50%, 1);
+  }
+  70% {
+    color: hsla(252, 100%, 50%, 1);
+  }
+  80% {
+    color: hsla(288, 100%, 50%, 1);
+  }
+  90% {
+    color: hsla(324, 100%, 50%, 1);
+  }
+  100% {
+    color: hsla(0, 100%, 50%, 1);
+  }
+}
+@keyframes shadows {
+  0% {
+    text-shadow: 0 0 var(--shadow-size) hsla(0, 100%, 50%);
+  }
+  10% {
+    text-shadow: 0 0 var(--shadow-size) hsla(36, 100%, 50%);
+  }
+  20% {
+    text-shadow: 0 0 var(--shadow-size) hsla(72, 100%, 50%);
+  }
+  30% {
+    text-shadow: 0 0 var(--shadow-size) hsla(108, 100%, 50%);
+  }
+  40% {
+    text-shadow: 0 0 var(--shadow-size) hsla(144, 100%, 50%);
+  }
+  50% {
+    text-shadow: 0 0 var(--shadow-size) hsla(180, 100%, 50%);
+  }
+  60% {
+    text-shadow: 0 0 var(--shadow-size) hsla(216, 100%, 50%);
+  }
+  70% {
+    text-shadow: 0 0 var(--shadow-size) hsla(252, 100%, 50%);
+  }
+  80% {
+    text-shadow: 0 0 var(--shadow-size) hsla(288, 100%, 50%);
+  }
+  90% {
+    text-shadow: 0 0 var(--shadow-size) hsla(324, 100%, 50%);
+  }
+  100% {
+    text-shadow: 0 0 var(--shadow-size) hsla(0, 100%, 50%);
+  }
+}
+
+#canvas {
+  background: radial-gradient(#090b0f, #030305);
+}
+
+.grabbing {
+  cursor: grabbing;
+}

@@ -1,0 +1,36 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* cursor: none; */
+    overscroll-behavior: none;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background: radial-gradient(#242424, #363636); */
+    background: black;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* filter: blur(1px); */
+}
+
+.canvas1 {
+    filter: blur(1px);
+}
+.canvas2 {
+    filter: blur(0px);
+}
+.canvas3 {
+    filter: blur(3px);
+}

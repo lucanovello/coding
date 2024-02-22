@@ -1,0 +1,119 @@
+/* VARIABLES */
+:root {
+  --side-width: 100vw;
+  --perspective: 1500px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 20px;
+  color: black;
+}
+
+h1 {
+  font-size: 4rem;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.grab {
+  cursor: grab;
+}
+.grabbing {
+  cursor: grabbing;
+}
+
+.main-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  transform: perspective(var(--perspective)) translateZ(-50vw);
+}
+
+.sub-container {
+  width: 100vw;
+  height: 100vh;
+  /* border: 5px solid rgb(0, 60, 255); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  transform: rotateX(-90deg) rotateZ(0deg) translateY(0vw);
+  transform-origin: center;
+  /* animation: rotate 5s linear infinite forwards; */
+  /* transition: 1s ease; */
+}
+/* .sub-container:hover {
+  transform: rotateX(-90deg) rotateZ(-90deg) translateY(0vw);
+} */
+
+@keyframes rotate {
+  0% {
+    transform: rotateX(-90deg) rotateZ(0deg) translateY(0vw);
+  }
+  100% {
+    transform: rotateX(-90deg) rotateZ(360deg) translateY(0vw);
+  }
+}
+
+.front {
+  transform: rotateX(-90deg) rotateZ(0deg) translateY(0vw);
+}
+.right {
+  transform: rotateX(-90deg) rotateZ(-90deg) translateY(0vw);
+}
+.back {
+  transform: rotateX(-90deg) rotateZ(-180deg) translateY(0vw);
+}
+.left {
+  transform: rotateX(-90deg) rotateZ(-270deg) translateY(0vw);
+}
+.side {
+  width: var(--side-width);
+  height: 100%;
+  padding: 5vh 10vw;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  border-left: 5px dashed black;
+  border-right: 5px dashed grey;
+  opacity: 1;
+}
+
+.side-1 {
+  background-color: rgba(0, 204, 255, 1);
+  transform: rotateX(90deg) translateZ(calc(var(--side-width) / 2));
+}
+.side-2 {
+  background-color: rgba(251, 255, 0, 1);
+  transform: rotateX(90deg) rotateY(90deg)
+    translateZ(calc(var(--side-width) / 2));
+}
+.side-3 {
+  background-color: rgba(0, 255, 0, 1);
+  transform: rotateX(90deg) rotateY(-180deg)
+    translateZ(calc(var(--side-width) / 2));
+}
+.side-4 {
+  background-color: rgba(255, 0, 0, 1);
+  transform: rotateX(90deg) rotateY(-90deg)
+    translateZ(calc(var(--side-width) / 2));
+}

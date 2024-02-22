@@ -1,0 +1,178 @@
+/* VARIABLES */
+:root {
+  --main-length: 400px;
+  --main-length-neg: -400px;
+  --sec-length: 300px;
+  --sec-length-neg: -300px;
+  --perspective: 1500px;
+
+  --light-color: rgba(255, 255, 255, 0.2);
+  --back-color: rgb(8, 7, 7);
+  --light-top-color: rgba(255, 255, 255, 0.1);
+  --light-bottom-color: rgba(29, 29, 29, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  font-size: 9px;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(
+      ellipse 35% 25% at center 65%,
+      var(--light-color),
+      transparent 70%
+    ),
+    linear-gradient(
+        hsl(204, 12%, 5%) 0%,
+        hsl(204, 12%, 7%) 38%,
+        hsl(197, 9%, 9%) 42%,
+        hsl(204, 12%, 6%) 100%
+      )
+      center/ cover no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+.grab {
+  cursor: grab;
+}
+.grabbing {
+  cursor: grabbing;
+}
+
+.image-container {
+  position: absolute;
+  width: auto;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: perspective(var(--perspective));
+  transform-style: preserve-3d;
+}
+
+.image {
+  width: calc(var(--main-length) / 2);
+  aspect-ratio: 0.5;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 5px ridge var(--back-color);
+  border-radius: 20px;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: 0.1s ease;
+}
+.image:hover {
+  width: calc((var(--main-length) / 2) + 5px);
+}
+
+/* IMAGE SHADOW EFFECT */
+.image::after {
+  content: '';
+  margin: 0 auto;
+  width: 110%;
+  height: 5px;
+  position: absolute;
+  bottom: -10%;
+  background: rgba(0, 0, 0, 1);
+  border-radius: 50%;
+  filter: blur(10px);
+  transform-style: preserve-3d;
+  transform: rotateX(90deg);
+}
+
+.image-1 {
+  background: radial-gradient(
+      80% 80% at top,
+      var(--light-top-color),
+      var(--light-bottom-color)
+    ),
+    center / cover no-repeat
+      url('images/paintings/Leonardo_Da_Vinci+Mona_Lisa+1504.jpg');
+  transform: translateZ(var(--main-length));
+}
+.image-2 {
+  background: radial-gradient(
+      80% 80% at top,
+      var(--light-top-color),
+      var(--light-bottom-color)
+    ),
+    center / cover no-repeat
+      url('images/paintings/Jean_Leon_Gerome+Bashi_Bazouk+0000.jpg');
+  transform: translateX(var(--sec-length-neg)) translateZ(var(--sec-length))
+    rotateY(315deg);
+}
+.image-3 {
+  background: radial-gradient(
+      80% 80% at top,
+      var(--light-top-color),
+      var(--light-bottom-color)
+    ),
+    center / cover no-repeat
+      url('images/paintings/Gustav_Klimt+The_Kiss+1908.jpg');
+  transform: translateX(var(--main-length-neg)) rotateY(270deg);
+}
+.image-4 {
+  background: radial-gradient(
+      80% 80% at top,
+      var(--light-top-color),
+      var(--light-bottom-color)
+    ),
+    center / cover no-repeat
+      url('images/paintings/Gustave_Courbet+The_Desperate_Man_(Self_Portrait)+1845_(1).jpg');
+  transform: translateX(var(--sec-length-neg)) translateZ(var(--sec-length-neg))
+    rotateY(225deg);
+}
+.image-5 {
+  background: radial-gradient(
+      80% 80% at top,
+      var(--light-top-color),
+      var(--light-bottom-color)
+    ),
+    center / cover no-repeat
+      url('images/paintings/Jan_Vermeer+Girl_With_A_Pearl_Earring+1665.jpg');
+  transform: translateZ(var(--main-length-neg)) rotateY(180deg);
+}
+.image-6 {
+  background: radial-gradient(
+      80% 80% at top,
+      var(--light-top-color),
+      var(--light-bottom-color)
+    ),
+    center / cover no-repeat
+      url('images/paintings/Vincent_Van_Gogh+Skeleton_With_A_Burning_Cigarette+1886.jpg');
+  transform: translateX(var(--sec-length)) translateZ(var(--sec-length-neg))
+    rotateY(135deg);
+}
+.image-7 {
+  background: radial-gradient(
+      80% 80% at top,
+      var(--light-top-color),
+      var(--light-bottom-color)
+    ),
+    center / cover no-repeat
+      url('images/paintings/Amedeo_Modigliani+Jeanne_Hebuterne+1919.jpg');
+  transform: translateX(var(--main-length)) rotateY(90deg);
+}
+.image-8 {
+  background: radial-gradient(
+      80% 80% at top,
+      var(--light-top-color),
+      var(--light-bottom-color)
+    ),
+    center / cover no-repeat
+      url('images/paintings/Egon_Schiele+Self_Portrait_With_Arm_Twisting_Above_Head+1910.jpg');
+  transform: translateX(var(--sec-length)) translateZ(var(--sec-length))
+    rotateY(45deg);
+}
