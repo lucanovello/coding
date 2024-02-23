@@ -9,6 +9,8 @@
         <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 /* font-family: 'Poppins', sans-serif; */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* font-family: 'Roboto', sans-serif; */
 *,
 *::before,
 *::after {
@@ -46,7 +48,8 @@ canvas {
 }
 
 .options {
-    padding: 20px;
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -58,40 +61,105 @@ canvas {
     border-radius: 10px;
     background: hsla(45, 5%, 90%, 0.5);
     row-gap: 1vh;
-    filter: opacity(0.1);
+    filter: opacity(0.2);
     cursor: default;
-    z-index: 9999;
+    overflow: hidden;
+    z-index: 99999;
     transition: 0.2s ease;
 }
 
 .options:hover {
+    width: 150px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 2vh;
+    left: 2vh;
+    border: 1px solid white;
+    border-radius: 10px;
+    background: hsla(45, 5%, 90%, 0.5);
+    row-gap: 1vh;
+    cursor: pointer;
+    z-index: 99999;
+    filter: opacity(0.9);
+    transition: 0.3s ease;
+}
+
+.options-icon-wrapper {
+    width: 60%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 20%;
     filter: opacity(1);
+    transition: 0.1s ease 0.1s;
+}
+.options:hover .options-icon-wrapper {
+    filter: opacity(0);
+    transition: 0.2s ease;
+}
+
+.options:hover .form-row,
+.options:hover  label,
+.options:hover input,
+.options:hover .controls-title,
+.options:hover .controls-list,
+.options:hover .controls-list-item {
+    filter: opacity(1);
+    transition: 0.4s ease 0.1s;
 }
 
 .form-row {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
+    filter: opacity(0);
 }
 
 label {
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
     text-align: left;
     align-self: flex-start;
     color: white;
+    cursor: pointer;
 }
 
 input {
     max-width: 100px;
-    padding: 1px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    font-weight: 300;
+    padding: 2px;
     cursor: pointer;
     z-index: 99999;
+}
+
+.controls-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: white;
+    text-decoration: underline 2px solid;
+}
+
+.controls-list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    list-style:  none;
+    line-height: 1.35em;
+}
+.controls-list-item {
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
 }
 
 .text-container {
@@ -106,10 +174,11 @@ input {
 }
 .seneca-text,
 .name-text {
-    font-size: 24px;
-    font-weight: 300;
+    font-size: 26px;
+    font-weight: 200;
     text-shadow: 0px 1px 2px black;
 }
+
 .name {
     font-size: 40px;
     letter-spacing: -0.02em;
@@ -124,6 +193,9 @@ input {
             <h2 class="name-text">Welcome to <span class="name" id="name">Luca Novello </span>'s Web Site</h2>
         </div>
         <div class="options" id="options" data-group="options">
+            <div class="options-icon-wrapper">
+                <svg fill="#ffffff" height="36px" width="36px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 460.054 460.054" xml:space="preserve" stroke="#ffffff"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M40.003,69.679C17.914,69.679,0,87.592,0,109.697c0,22.089,17.914,39.987,40.003,39.987 c22.089,0,40.003-17.898,40.003-39.987C80.006,87.592,62.092,69.679,40.003,69.679z"></path> </g> <g> <path d="M40.003,190.032C17.914,190.032,0,207.93,0,230.035c0,22.089,17.914,40.002,40.003,40.002 c22.089,0,40.003-17.913,40.003-40.002C80.006,207.93,62.092,190.032,40.003,190.032z"></path> </g> <g> <path d="M40.003,310.37C17.914,310.37,0,328.283,0,350.372c0,22.089,17.914,40.003,40.003,40.003 c22.089,0,40.003-17.914,40.003-40.003C80.006,328.283,62.092,310.37,40.003,310.37z"></path> </g> <g> <path d="M429.973,79.601H145.419c-16.611,0-30.081,13.47-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554 c16.61,0,30.081-13.469,30.081-30.081C460.054,93.071,446.583,79.601,429.973,79.601z"></path> </g> <g> <path d="M429.973,199.939H145.419c-16.611,0-30.081,13.469-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554 c16.61,0,30.081-13.469,30.081-30.081C460.054,213.408,446.583,199.939,429.973,199.939z"></path> </g> <g> <path d="M429.973,320.291H145.419c-16.611,0-30.081,13.469-30.081,30.081c0,16.611,13.469,30.08,30.081,30.08h284.554 c16.61,0,30.081-13.469,30.081-30.08C460.054,333.759,446.583,320.291,429.973,320.291z"></path> </g> </g> </g></svg>
+            </div>
             <div class="form-row" data-group="options">
                 <label for="acc" id="acc-label" data-group="options">Acceleration: </label>
                 <input
@@ -150,6 +222,15 @@ input {
                     data-group="options"
                 />
             </div>
+            <div class="form-row">
+                <p class="controls-title">Controls</p>
+                <ul class="controls-list">
+                    <li class="controls-list-item">W or &#8593; = Forward</li>
+                    <li class="controls-list-item">S or &#8595; = Reverse</li>
+                    <li class="controls-list-item">A or &#8592; = &#8634;</li>
+                    <li class="controls-list-item">D or &#8594; = &#8635;</li>
+                </ul>
+            </div>
         </div>
         <script>
 
@@ -161,7 +242,7 @@ const turnSpeedInput = document.getElementById('turnspeed-input');
 const accLabel = document.getElementById('acc-label');
 const turnSpeedLabel = document.getElementById('turnspeed-label');
 
-let nameTextHue = 40;
+let nameTextHue = Math.random() * 360;
 
 class Player {
     constructor(x, y) {
@@ -173,7 +254,7 @@ class Player {
         //movement, speed & size
         this.x = x;
         this.y = y;
-        this.radius = 10;
+        this.radius = 9;
         this.velX = 0;
         this.velY = 0;
         this.angle = 0;
@@ -193,9 +274,9 @@ class Player {
         this.turnSpeedDefaultValue = 0.5 + window.innerWidth / this.maxScreenWidth;
         this.decel = 0.1;
         // color & style
-        this.hue = 50;
-        this.saturation = 100;
-        this.brightness = 40;
+        this.hue = nameTextHue + 35
+        this.saturation = 90;
+        this.brightness = 50;
         this.cornerRadius = 5;
         // initialize canvases
         this.initCanvases();
@@ -251,22 +332,23 @@ class Player {
         this.y += this.velY;
     }
     drawPlayer() {
-        body.style.background = `radial-gradient(circle at ${this.x}px ${this.y}px, hsl(200, 50%, 8%), hsl(205, 10%, 0%))`;
+        const finalHue = nameTextHue + 35
+        body.style.background = `radial-gradient(circle at ${this.x}px ${this.y}px, hsl(${nameTextHue-45}, 10%, 5%), hsl(205, 5%, 0%) 40%)`;
         this.context.save();
         this.context.translate(this.x, this.y);
         this.context.rotate(this.angle);
-        this.context.fillStyle = `hsl(${this.hue},${this.saturation}%,${this.brightness}%)`;
-        this.context.strokeStyle = `hsl(${this.hue},${this.saturation}%,${this.brightness * 0.1}%)`;
-        this.context.lineWidth = 1;
+        this.context.fillStyle = `hsl(${finalHue},${this.saturation}%,${this.brightness}%)`;
+        this.context.strokeStyle = `hsl(${finalHue},${this.saturation}%,${this.brightness * 0.7}%)`;
+        this.context.lineWidth = 0.5;
         this.context.beginPath();
         //nose point
         this.context.moveTo(this.radius, 0);
         //bottom right point
-        this.context.lineTo(-this.radius, this.radius);
+        this.context.lineTo(-this.radius, this.radius * 0.9);
         //bottom middle
         this.context.lineTo(-this.radius * 0.618, 0);
         //bottom left point
-        this.context.lineTo(-this.radius, -this.radius);
+        this.context.lineTo(-this.radius, -this.radius * 0.9);
         this.context.closePath();
         this.context.fill();
         this.context.stroke();

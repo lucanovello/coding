@@ -1,9 +1,12 @@
 const body = document.body;
+const nameText = document.getElementById("name")
 const options = document.getElementById('options');
 const accInput = document.getElementById('acc-input');
 const turnSpeedInput = document.getElementById('turnspeed-input');
 const accLabel = document.getElementById('acc-label');
 const turnSpeedLabel = document.getElementById('turnspeed-label');
+
+let nameTextHue = Math.random() * 360;
 
 class Player {
     constructor(x, y) {
@@ -15,7 +18,7 @@ class Player {
         //movement, speed & size
         this.x = x;
         this.y = y;
-        this.radius = 10;
+        this.radius = 9;
         this.velX = 0;
         this.velY = 0;
         this.angle = 0;
@@ -26,18 +29,18 @@ class Player {
         this.directionX = 0;
         this.directionY = 0;
         this.particleArr = [];
-        this.particlesPerFrame = 10;
+        this.particlesPerFrame = 7;
         // stats
         this.maxScreenWidth = 2880;
         this.health = 10;
         this.damage = 1;
-        this.accDefaultValue = 0.6 + window.innerWidth / this.maxScreenWidth;
-        this.turnSpeedDefaultValue = 0.6 + window.innerWidth / this.maxScreenWidth;
+        this.accDefaultValue = 0.4 + window.innerWidth / this.maxScreenWidth;
+        this.turnSpeedDefaultValue = 0.5 + window.innerWidth / this.maxScreenWidth;
         this.decel = 0.1;
         // color & style
-        this.hue = 47;
-        this.saturation = 100;
-        this.brightness = 40;
+        this.hue = nameTextHue + 35
+        this.saturation = 90;
+        this.brightness = 50;
         this.cornerRadius = 5;
         // initialize canvases
         this.initCanvases();
@@ -93,22 +96,23 @@ class Player {
         this.y += this.velY;
     }
     drawPlayer() {
-        body.style.background = `radial-gradient(circle at ${this.x}px ${this.y}px, hsl(200, 50%, 10%), hsl(205, 10%, 0%))`;
+        const finalHue = nameTextHue + 35
+        body.style.background = `radial-gradient(circle at ${this.x}px ${this.y}px, hsl(${nameTextHue-45}, 10%, 5%), hsl(205, 5%, 0%) 40%)`;
         this.context.save();
         this.context.translate(this.x, this.y);
         this.context.rotate(this.angle);
-        this.context.fillStyle = `hsl(${this.hue},${this.saturation}%,${this.brightness}%)`;
-        this.context.strokeStyle = `hsl(${this.hue},${this.saturation}%,${this.brightness * 0.1}%)`;
-        this.context.lineWidth = 1;
+        this.context.fillStyle = `hsl(${finalHue},${this.saturation}%,${this.brightness}%)`;
+        this.context.strokeStyle = `hsl(${finalHue},${this.saturation}%,${this.brightness * 0.7}%)`;
+        this.context.lineWidth = 0.5;
         this.context.beginPath();
         //nose point
         this.context.moveTo(this.radius, 0);
         //bottom right point
-        this.context.lineTo(-this.radius, this.radius);
+        this.context.lineTo(-this.radius, this.radius * 0.9);
         //bottom middle
         this.context.lineTo(-this.radius * 0.618, 0);
         //bottom left point
-        this.context.lineTo(-this.radius, -this.radius);
+        this.context.lineTo(-this.radius, -this.radius * 0.9);
         this.context.closePath();
         this.context.fill();
         this.context.stroke();
@@ -183,7 +187,7 @@ class Particle {
         this.jiggle = 1.5;
         this.minThrottle = 0.1;
         this.radius = radius;
-        this.hue = getRandomArbitrary(180, 200);
+        this.hueAdjust = getRandomArbitrary(-20, 20);
         this.saturation = getRandomArbitrary(90, 100) ;
         this.brightness = getRandomArbitrary(40, 55);
         this.alpha = 1;
@@ -205,7 +209,7 @@ class Particle {
             this.alpha *=
                 this.radius >= this.player.radius * 1.5
                     ? getRandomArbitrary(0.001, 0.99)
-                    : getRandomArbitrary(0.7, 0.99);
+                    : getRandomArbitrary(0.8, 0.99);
             this.saturation *= getRandomArbitrary(0.8, 0.99);
             // this.brightness *= getRandomArbitrary(1.01, 1.05);
             this.accel *= getRandomArbitrary(0.97, 0.99);
@@ -215,7 +219,7 @@ class Particle {
         this.context.save();
         this.context.translate(this.x, this.y);
         this.context.rotate(this.angle);
-        this.context.fillStyle = `hsla(${this.hue}, ${this.saturation}%, ${this.brightness}%, ${this.alpha})`;
+        this.context.fillStyle = `hsla(${nameTextHue + this.hueAdjust}, ${this.saturation}%, ${this.brightness}%, ${this.alpha})`;
         this.context.beginPath();
         this.context.arc(-this.player.radius, 0, this.radius * 0.618, 0, Math.PI * 2);
         // this.context.rect(-this.radius * 3, -this.radius * 0.5, this.radius, this.radius);
@@ -224,7 +228,6 @@ class Particle {
         this.context.restore();
     }
 }
-// STARS ***************
 class Star {
     constructor(canvas, context) {
         this.canvas = canvas;
@@ -274,7 +277,7 @@ initCanvas() {
 }
 createStars() { 
     this.starArr = []
-    this.starCount = this.canvas.width * 2
+    this.starCount = this.canvas.width * 1.5
     for ( let i = 0; i < this.starCount; i++) {
         this.starArr.push(
             new Star(
@@ -296,7 +299,6 @@ resize(width, height) {
     this.canvas.width = width;
     this.canvas.height = height;
     this.createStars();
-    console.log(this.starArr.length);
 }
 }
 class Mouse {
@@ -376,7 +378,11 @@ class Mouse {
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
-
+// Update Name Text Color
+function nameColorHandler() {
+    nameText.style.color = `hsl(${nameTextHue}, 100%, 50%)`
+    nameTextHue += 0.05
+}
 // EVENT LISTENERS
 window.addEventListener('resize', () => {
     player.resize(window.innerWidth, window.innerHeight);
@@ -507,8 +513,6 @@ turnSpeedInput.addEventListener('wheel', (e) => {
     if (e.wheelDeltaY < 0)
         turnSpeedInput.value = (parseFloat(turnSpeedInput.value) - 0.01).toFixed(2);
 });
-
-
 // Instantiate objects
 const stars = new Stars()
 const player = new Player(window.innerWidth * 0.5, window.innerHeight * 0.5);
@@ -517,7 +521,6 @@ const mouse = new Mouse(
     0,
     10
 );
-
 // MAIN FUNCTION
 function animate() {
     stars.drawStars()
@@ -525,6 +528,7 @@ function animate() {
     // mouse.draw();
     accLabel.innerText = `Acceleration: ${accInput.value}`;
     turnSpeedLabel.innerText = `TurnSpeed: ${turnSpeedInput.value}`;
+    nameColorHandler();
     requestAnimationFrame(animate);
 }
 animate();

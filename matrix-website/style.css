@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 /* font-family: 'Poppins', sans-serif; */
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap');
+/* font-family: 'Roboto', sans-serif; */
 *,
 *::before,
 *::after {
@@ -9,19 +10,20 @@
     box-sizing: border-box;
     overscroll-behavior: none;
 }
-
 body {
     width: 100%;
     min-height: 100vh;
+    padding: 5vh 10%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    background: radial-gradient(hsl(200, 10%, 10%), hsl(205, 10%, 2%));
+    align-items: flex-start;
+    /* background: radial-gradient(hsl(200, 10%, 10%), hsl(205, 10%, 2%)); */
     transition: 0.5s ease;
 }
-
 canvas {
     position: fixed;
+    top: 0;
+    left: 0;
     user-select: none;
     -webkit-touch-callout: none; /* Safari */
     -webkit-user-select: none; /* Chrome */
@@ -29,15 +31,16 @@ canvas {
     -ms-user-select: none; /* Internet Explorer/Edge */
     /* cursor: none; */
 }
-#canvas-player {
-    z-index: 99;
+#canvas-player, #canvas-particles {
+    z-index: 9999;
 }
 #canvas-mouse {
     z-index: 999;
 }
 
 .options {
-    padding: 20px;
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -49,38 +52,127 @@ canvas {
     border-radius: 10px;
     background: hsla(45, 5%, 90%, 0.5);
     row-gap: 1vh;
-    filter: opacity(0.1);
+    filter: opacity(0.2);
     cursor: default;
-    z-index: 9999;
+    overflow: hidden;
+    z-index: 99999;
     transition: 0.2s ease;
 }
 
 .options:hover {
+    width: 150px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 2vh;
+    left: 2vh;
+    border: 1px solid white;
+    border-radius: 10px;
+    background: hsla(45, 5%, 90%, 0.5);
+    row-gap: 1vh;
+    cursor: pointer;
+    z-index: 99999;
+    filter: opacity(0.9);
+    transition: 0.3s ease;
+}
+
+.options-icon-wrapper {
+    width: 60%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 20%;
     filter: opacity(1);
+    transition: 0.1s ease 0.1s;
+}
+.options:hover .options-icon-wrapper {
+    filter: opacity(0);
+    transition: 0.2s ease;
+}
+
+.options:hover .form-row,
+.options:hover  label,
+.options:hover input,
+.options:hover .controls-title,
+.options:hover .controls-list,
+.options:hover .controls-list-item {
+    filter: opacity(1);
+    transition: 0.4s ease 0.1s;
 }
 
 .form-row {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
+    filter: opacity(0);
 }
 
 label {
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
     text-align: left;
     align-self: flex-start;
     color: white;
+    cursor: pointer;
 }
 
 input {
     max-width: 100px;
-    padding: 1px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
-    font-weight: 300;
+    padding: 2px;
     cursor: pointer;
     z-index: 99999;
+}
+
+.controls-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: white;
+    text-decoration: underline 2px solid;
+}
+
+.controls-list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    list-style:  none;
+    line-height: 1.35em;
+}
+.controls-list-item {
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+}
+
+.text-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    line-height: 3em;
+    z-index: 99;
+}
+.seneca-text,
+.name-text {
+    font-size: 26px;
+    font-weight: 200;
+    text-shadow: 0px 1px 2px black;
+}
+
+.name {
+    font-size: 40px;
+    letter-spacing: -0.02em;
+    color: hsl(48, 100%, 50%);
+    font-weight: 900;
 }
