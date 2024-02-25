@@ -39,49 +39,67 @@ canvas {
     z-index: 999;
 }
 
-.options {
-    width: 40px;
-    height: 40px;
+.options-container {
+    width: 15%;
+    max-width: 280px;
+    min-width: 150px;
+    height: 96vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-end;
     flex-direction: column;
     position: fixed;
     top: 2vh;
-    left: 2vh;
+    right: 2vh;
+    z-index: 99999;
+    border: 2px dotted red;
+}
+
+.options-icon-wrapper {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 3vh;
+    right: 3vh;
+    filter: opacity(1);
+    transition: 0.1s ease 0.1s;
+}
+.options-icon-wrapper:hover,
+.options:hover >.options-icon-wrapper {
+    filter: opacity(0);
+    transition: 0.2s ease;
+}
+
+.options {
+    width: 100%;
+    height: 100%;
+    padding: 3vh 1vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
     border: 2px dotted white;
     border-radius: 10px;
     background: hsla(200, 10%, 30%, 0.6);
     filter: opacity(0.2);
     cursor: pointer;
     overflow: hidden;
-    z-index: 99999;
     transition: 0.2s ease;
 }
 
 .options:hover {
-    width: 175px;
-    height: 240px;
+    /* width: 175px;
+    height: 240px; */
+    width: 100%;
     border: 2px dotted white;
     filter: opacity(0.9);
     transition: 0.3s ease, border 0.1s ease;
 }
 
-.options-icon-wrapper {
-    width: 60%;
-    height: 60%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 20%;
-    filter: opacity(1);
-    transition: 0.1s ease 0.1s;
-}
-.options:hover .options-icon-wrapper {
-    filter: opacity(0);
-    transition: 0.2s ease;
-}
+
 
 .options:hover .form-row,
 .options:hover  label,
@@ -100,7 +118,7 @@ canvas {
     align-items: center;
     flex-direction: column;
     text-align: left;
-    filter: opacity(0);
+    /* filter: opacity(0); */
 }
 
 label {

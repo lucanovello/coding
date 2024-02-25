@@ -36,9 +36,9 @@ class Player {
         this.maxScreenWidth = 2880;
         this.health = 10;
         this.damage = 1;
-        this.accDefaultValue = 0.4 + window.innerWidth / this.maxScreenWidth;
-        this.turnSpeedDefaultValue = 0.5 + window.innerWidth / this.maxScreenWidth;
-        this.decel = 0.1;
+        this.accDefaultValue = 0.1 + window.innerWidth / this.maxScreenWidth;
+        this.turnSpeedDefaultValue = 0.1 + window.innerWidth / this.maxScreenWidth;
+        this.decel = 0.01;
         // Coins
         this.coinArr = []
         this.coinScore = 0
