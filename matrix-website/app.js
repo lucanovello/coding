@@ -13,6 +13,8 @@ class Player {
         // canvases & contexts
         this.canvas;
         this.context;
+        this.coinCanvas;
+        this.coinContext;
         this.particleCanvas;
         this.particleContext;
         //movement, speed & size
@@ -37,6 +39,9 @@ class Player {
         this.accDefaultValue = 0.4 + window.innerWidth / this.maxScreenWidth;
         this.turnSpeedDefaultValue = 0.5 + window.innerWidth / this.maxScreenWidth;
         this.decel = 0.1;
+        // Coins
+        this.coinArr = []
+        this.coinScore = 0
         // color & style
         this.hue = nameTextHue + 35
         this.saturation = 90;
@@ -64,7 +69,15 @@ class Player {
         document.body.appendChild(canvas);
         this.canvas = canvas;
         this.context = ctx;
-
+        //initialize coin canvas
+        const coinCanvas = document.createElement('canvas');
+        const coinCtx = coinCanvas.getContext('2d');
+        coinCanvas.width = window.innerWidth;
+        coinCanvas.height = window.innerHeight;
+        coinCanvas.id = 'canvas-coins';
+        document.body.appendChild(coinCanvas);
+        this.coinCanvas = coinCanvas;
+        this.coinContext = coinCtx;
         // Initialize Screen Options
         accInput.value = this.accDefaultValue;
         turnSpeedInput.value = this.turnSpeedDefaultValue;
@@ -92,14 +105,14 @@ class Player {
         this.angle += this.directionX * newturnSpeed;
         this.velX += Math.cos(this.angle) * this.directionY * newAcc - this.velX * this.decel;
         this.velY += Math.sin(this.angle) * this.directionY * newAcc - this.velY * this.decel;
-        this.x += this.velX;
-        this.y += this.velY;
+        this.x += this.velX / this.canvas.width;
+        this.y += this.velY / this.canvas.height;
     }
     drawPlayer() {
         const finalHue = nameTextHue + 35
-        body.style.background = `radial-gradient(circle at ${this.x}px ${this.y}px, hsl(${nameTextHue-45}, 10%, 5%), hsl(205, 5%, 0%) 40%)`;
+        body.style.background = `radial-gradient(circle at ${this.x * this.canvas.width}px ${this.y * this.canvas.height}px, hsl(${nameTextHue-45}, 10%, 5%), hsl(205, 5%, 0%) 40%)`;
         this.context.save();
-        this.context.translate(this.x, this.y);
+        this.context.translate(this.x * this.canvas.width, this.y * this.canvas.height);
         this.context.rotate(this.angle);
         this.context.fillStyle = `hsl(${finalHue},${this.saturation}%,${this.brightness}%)`;
         this.context.strokeStyle = `hsl(${finalHue},${this.saturation}%,${this.brightness * 0.7}%)`;
@@ -124,6 +137,7 @@ class Player {
         this.createParticle();
         this.drawParticles();
         this.drawPlayer();
+        this.createCoins();
         this.update();
         this.screenWrap();
     }
@@ -140,8 +154,8 @@ class Player {
             this.particleArr.push(
                 new Particle(
                     this,
-                    this.x,
-                    this.y,
+                    this.x * this.canvas.width,
+                    this.y * this.canvas.height,
                     getRandomArbitrary(this.radius * 0.2, this.radius * 0.45),
                     getRandomArbitrary(this.radius * 0.15, this.radius * 0.2),
                     this.angle,
@@ -158,6 +172,26 @@ class Player {
             particle.update();
         }
     }
+    createCoins() {
+        if (this.coinArr.length == 0) {
+            this.coinArr.push(
+                new Coin(
+                    this.coinCanvas,
+                    this.coinContext,
+                    getRandomArbitrary(0.1, 0.9),
+                    getRandomArbitrary(0.1, 0.9),
+                    player.radius * 4
+                )
+            );
+        }
+    }
+    drawCoins() {
+        for (let i = 0; i < this.coinArr.length; i++) {
+            const coin = this.coinArr[i];
+            this.coinContext.clearRect(0, 0, this.coinCanvas.width, this.coinCanvas.height)
+            coin.draw();
+        }
+    }
     screenWrap() {
         if (this.x + this.radius < 0) this.x = this.canvas.width + this.radius;
         if (this.x > this.canvas.width + this.radius) this.x = -this.radius;
@@ -169,8 +203,12 @@ class Player {
         this.canvas.height = height;
         this.particleCanvas.width = width;
         this.particleCanvas.height = height;
-        this.x = width * 0.5;
-        this.y = height * 0.5;
+        this.coinCanvas.width = width;
+        this.coinCanvas.height = height;
+        for (let i = 0; i < this.coinArr; i++) {
+            const coin = this.coinArr[i]
+            coin.canvas = this.coinCanvas       
+        }
     }
 }
 class Particle {
@@ -227,6 +265,45 @@ class Particle {
         this.context.closePath();
         this.context.restore();
     }
+}
+
+class Coin {
+    constructor(canvas, context, x, y, radius) {
+    this.canvas = canvas;
+    this.context = context;
+    this.normalizedX = x;
+    this.normalizedY = y;
+    this.radius = radius
+    this.hue = 47
+    this.saturation = 100
+    this.brightness = 50
+    this.alpha = 1
+    this.counter = 0
+}
+update
+draw() {
+    const x = this.normalizedX * this.canvas.width
+    const y = this.normalizedY * this.canvas.height
+    const radiusAdjust = this.radius*0.25
+    const osc = Math.sin(this.counter)
+    this.context.fillStyle = `hsla(${this.hue}, ${this.saturation}%, ${this.brightness}%, ${this.alpha})`;
+    this.context.beginPath();
+    // CIRCLE SHAPE
+    // this.context.moveTo((x - radiusAdjust) + (radiusAdjust * osc), y);
+    // this.context.quadraticCurveTo((x - radiusAdjust) + (radiusAdjust * osc), y - this.radius, x, y - this.radius);
+    // this.context.quadraticCurveTo((x + radiusAdjust) + (radiusAdjust * -osc), y - this.radius, (x + radiusAdjust) + (radiusAdjust * -osc), y);
+    // this.context.quadraticCurveTo((x + radiusAdjust) + (radiusAdjust * -osc), y + this.radius, x, y + this.radius);
+    // this.context.quadraticCurveTo((x - radiusAdjust) + (radiusAdjust * osc), y + this.radius, (x - radiusAdjust) + (radiusAdjust * osc), y);
+    // DIAMOND SHAPE
+    this.context.moveTo((x - radiusAdjust) + (radiusAdjust * osc), y);
+    this.context.lineTo(x, y - this.radius*0.5);
+    this.context.lineTo((x + radiusAdjust) + (radiusAdjust * -osc), y);
+    this.context.lineTo(x, y + this.radius*0.5);
+    this.context.lineTo((x + -radiusAdjust) + (radiusAdjust * osc), y );
+    this.context.fill();
+    this.context.closePath();
+    this.counter += 0.05
+}
 }
 class Star {
     constructor(canvas, context) {
@@ -515,7 +592,7 @@ turnSpeedInput.addEventListener('wheel', (e) => {
 });
 // Instantiate objects
 const stars = new Stars()
-const player = new Player(window.innerWidth * 0.5, window.innerHeight * 0.5);
+const player = new Player(0.5, 0.5);
 const mouse = new Mouse(
     0,
     0,
@@ -526,6 +603,9 @@ function animate() {
     stars.drawStars()
     player.animate();
     // mouse.draw();
+    if (player.coinArr.length > 0) {
+        player.drawCoins();
+    }
     accLabel.innerText = `Acceleration: ${accInput.value}`;
     turnSpeedLabel.innerText = `TurnSpeed: ${turnSpeedInput.value}`;
     nameColorHandler();
