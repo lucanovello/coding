@@ -31,7 +31,6 @@ class UserInterface {
     });
     // Touch Events
     window.addEventListener("touchmove", (e) => {
-      mouse.shouldDraw = true;
       mouse.isMobileControl = true;
       if (e.target.dataset.group != "options") {
         mouse.touchDiffX = e.changedTouches[0].clientX - mouse.touchstartX;
@@ -40,7 +39,10 @@ class UserInterface {
       }
     });
     window.addEventListener("touchstart", (e) => {
-      mouse.shouldDraw = true;
+      console.log(e.target);
+      if (e.target.dataset.group != "options") {
+        mouse.shouldDraw = true;
+      }
       mouse.isMobileControl = true;
       if (e.target.dataset.group != "options") {
         mouse.touchstartX = e.changedTouches[0].clientX;
@@ -50,6 +52,8 @@ class UserInterface {
     });
     window.addEventListener("touchend", (e) => {
       mouse.shouldDraw = false;
+      mouse.context.clearRect(0, 0, mouse.canvas.width, mouse.canvas.height);
+
       mouse.isMobileControl = false;
       mouse.touchstartX = undefined;
       mouse.touchstartY = undefined;
@@ -570,8 +574,8 @@ class Mouse {
     this.touchstartY;
     this.touchDiffX = 0;
     this.touchDiffY = 0;
-    this.touchDeadzoneX = 30;
-    this.touchDeadzoneY = 20;
+    this.touchDeadzoneX = 15;
+    this.touchDeadzoneY = 10;
     this.isMobileControl = false;
     // color & style
     this.hue = 0;
@@ -579,7 +583,7 @@ class Mouse {
     this.brightness = 50;
     this.alpha = 1;
     this.cornerRadius = 5;
-    this.shouldDraw = true;
+    this.shouldDraw = false;
     this.initCanvas();
   }
   initCanvas() {
@@ -608,29 +612,29 @@ class Mouse {
       this.context.stroke();
       this.context.fill();
       this.context.closePath();
-    }
-    // start position
-    if (this.touchstartX != this.x || this.touchstartY != this.y) {
-      this.context.fillStyle = `hsla(180,0%,100%,0.05)`;
-      this.context.strokeStyle = `hsla(180,0%,100%,0.1)`;
-      this.context.lineWidth = 1.5;
-      this.context.beginPath();
-      this.context.arc(
-        this.touchstartX,
-        this.touchstartY,
-        this.radius * 1.1,
-        0,
-        Math.PI * 2
-      );
-      this.context.stroke();
-      this.context.fill();
-      this.context.closePath();
+      // start position
+      if (this.touchstartX != this.x || this.touchstartY != this.y) {
+        this.context.fillStyle = `hsla(180,0%,100%,0.05)`;
+        this.context.strokeStyle = `hsla(180,0%,100%,0.1)`;
+        this.context.lineWidth = 1.5;
+        this.context.beginPath();
+        this.context.arc(
+          this.touchstartX,
+          this.touchstartY,
+          this.radius * 1.1,
+          0,
+          Math.PI * 2
+        );
+        this.context.stroke();
+        this.context.fill();
+        this.context.closePath();
 
-      this.context.beginPath();
-      this.context.moveTo(this.touchstartX, this.touchstartY);
-      this.context.lineTo(this.x, this.y);
-      this.context.stroke();
-      this.context.closePath();
+        this.context.beginPath();
+        this.context.moveTo(this.touchstartX, this.touchstartY);
+        this.context.lineTo(this.x, this.y);
+        this.context.stroke();
+        this.context.closePath();
+      }
     }
   }
   resize(width, height) {
@@ -648,7 +652,7 @@ const player = new Player(
   userInterface.mainHue,
   userInterface.particleCountInput.value
 );
-const mouse = new Mouse(0, 0, 10);
+const mouse = new Mouse(0, 0, 30);
 
 // Get random number from range
 function getRandomRange(min, max) {
@@ -664,7 +668,7 @@ function animate() {
     userInterface.mainHue,
     userInterface.particleCountInput.value
   );
-  // mouse.draw();
+  mouse.draw();
   // if (player.coinArr.length > 0) {
   //   player.drawCoins();
   // }

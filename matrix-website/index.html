@@ -5,890 +5,154 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css" />
     <title>Luca Novello | Seneca College of Applied Arts & Technology</title>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
-      /* font-family: 'Poppins', sans-serif; */
-      @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap");
-      /* font-family: 'Roboto', sans-serif; */
-      *,
-      *::before,
-      *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        overscroll-behavior: none;
-      }
-      body {
-        width: 100%;
-        min-height: 100vh;
-        padding: 5vh 10%;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        /* background: radial-gradient(hsl(200, 10%, 10%), hsl(205, 10%, 2%)); */
-        transition: 0.5s ease;
-      }
-      canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        user-select: none;
-        -webkit-touch-callout: none; /* Safari */
-        -webkit-user-select: none; /* Chrome */
-        -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-        /* cursor: none; */
-      }
-      #canvas-player,
-      #canvas-particles {
-        z-index: 9999;
-      }
-      #canvas-mouse {
-        z-index: 999;
-      }
-
-      .options {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: column;
-        position: fixed;
-        top: 2vh;
-        left: 2vh;
-        border: 1px solid white;
-        border-radius: 10px;
-        background: hsla(45, 5%, 90%, 0.5);
-        row-gap: 1vh;
-        filter: opacity(0.2);
-        cursor: default;
-        overflow: hidden;
-        z-index: 99999;
-        transition: 0.2s ease;
-      }
-
-      .options:hover {
-        width: 150px;
-        height: 250px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        position: fixed;
-        top: 2vh;
-        left: 2vh;
-        border: 1px solid white;
-        border-radius: 10px;
-        background: hsla(45, 5%, 90%, 0.5);
-        row-gap: 1vh;
-        cursor: pointer;
-        z-index: 99999;
-        filter: opacity(0.9);
-        transition: 0.3s ease;
-      }
-
-      .options-icon-wrapper {
-        width: 60%;
-        height: 60%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        top: 20%;
-        filter: opacity(1);
-        transition: 0.1s ease 0.1s;
-      }
-      .options:hover .options-icon-wrapper {
-        filter: opacity(0);
-        transition: 0.2s ease;
-      }
-
-      .options:hover .form-row,
-      .options:hover label,
-      .options:hover input,
-      .options:hover .controls-title,
-      .options:hover .controls-list,
-      .options:hover .controls-list-item {
-        filter: opacity(1);
-        transition: 0.4s ease 0.1s;
-      }
-
-      .form-row {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        filter: opacity(0);
-      }
-
-      label {
-        font-family: "Roboto", sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        text-align: left;
-        align-self: flex-start;
-        color: white;
-        cursor: pointer;
-      }
-
-      input {
-        max-width: 100px;
-        padding: 2px;
-        cursor: pointer;
-        z-index: 99999;
-      }
-
-      .controls-title {
-        font-family: "Poppins", sans-serif;
-        font-size: 18px;
-        font-weight: 900;
-        color: white;
-        text-decoration: underline 2px solid;
-      }
-
-      .controls-list {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: column;
-        list-style: none;
-        line-height: 1.35em;
-      }
-      .controls-list-item {
-        font-family: "Roboto", sans-serif;
-        font-size: 13px;
-        font-weight: 600;
-        color: white;
-      }
-
-      .text-container {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: column;
-        color: white;
-        font-family: "Poppins", sans-serif;
-        line-height: 3em;
-        z-index: 99;
-      }
-      .seneca-text,
-      .name-text {
-        font-size: 26px;
-        font-weight: 200;
-        text-shadow: 0px 1px 2px black;
-      }
-
-      .name {
-        font-size: 40px;
-        letter-spacing: -0.02em;
-        color: hsl(48, 100%, 50%);
-        font-weight: 900;
-      }
-    </style>
   </head>
   <body id="body">
     <div class="text-container">
       <h1 class="seneca-text">Seneca College of Applied Arts & Technology</h1>
       <h2 class="name-text">
-        Welcome to <span class="name" id="name">Luca Novello </span>'s Web Site
+        Welcome to
+        <span class="name-wrapper"
+          ><span class="name" id="name">Luca Novello </span>'s</span
+        >
+        Website
       </h2>
     </div>
-    <div class="options" id="options" data-group="options">
-      <div class="options-icon-wrapper">
-        <svg
-          fill="#ffffff"
-          height="36px"
-          width="36px"
-          version="1.1"
-          id="Capa_1"
-          xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          viewBox="0 0 460.054 460.054"
-          xml:space="preserve"
-          stroke="#ffffff"
-        >
-          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-          <g
-            id="SVGRepo_tracerCarrier"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></g>
-          <g id="SVGRepo_iconCarrier">
-            <g>
-              <g>
-                <path
-                  d="M40.003,69.679C17.914,69.679,0,87.592,0,109.697c0,22.089,17.914,39.987,40.003,39.987 c22.089,0,40.003-17.898,40.003-39.987C80.006,87.592,62.092,69.679,40.003,69.679z"
-                ></path>
-              </g>
-              <g>
-                <path
-                  d="M40.003,190.032C17.914,190.032,0,207.93,0,230.035c0,22.089,17.914,40.002,40.003,40.002 c22.089,0,40.003-17.913,40.003-40.002C80.006,207.93,62.092,190.032,40.003,190.032z"
-                ></path>
-              </g>
-              <g>
-                <path
-                  d="M40.003,310.37C17.914,310.37,0,328.283,0,350.372c0,22.089,17.914,40.003,40.003,40.003 c22.089,0,40.003-17.914,40.003-40.003C80.006,328.283,62.092,310.37,40.003,310.37z"
-                ></path>
-              </g>
-              <g>
-                <path
-                  d="M429.973,79.601H145.419c-16.611,0-30.081,13.47-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554 c16.61,0,30.081-13.469,30.081-30.081C460.054,93.071,446.583,79.601,429.973,79.601z"
-                ></path>
-              </g>
-              <g>
-                <path
-                  d="M429.973,199.939H145.419c-16.611,0-30.081,13.469-30.081,30.096c0,16.612,13.469,30.081,30.081,30.081h284.554 c16.61,0,30.081-13.469,30.081-30.081C460.054,213.408,446.583,199.939,429.973,199.939z"
-                ></path>
-              </g>
-              <g>
-                <path
-                  d="M429.973,320.291H145.419c-16.611,0-30.081,13.469-30.081,30.081c0,16.611,13.469,30.08,30.081,30.08h284.554 c16.61,0,30.081-13.469,30.081-30.08C460.054,333.759,446.583,320.291,429.973,320.291z"
-                ></path>
-              </g>
-            </g>
-          </g>
-        </svg>
+    <button
+      class="options-icon-wrapper"
+      id="options-icon-wrapper"
+      data-group="options"
+    >
+      <span
+        class="options-icon-top"
+        id="options-icon-top"
+        data-group="options"
+      ></span
+      ><span
+        class="options-icon-bottom"
+        id="options-icon-bottom"
+        data-group="options"
+      ></span>
+    </button>
+    <div class="options-container" id="options-container" data-group="options">
+      <div class="option-settings-wrapper" data-group="options">
+        <div class="form-row" data-group="options">
+          <label for="acc" id="acc-label" data-group="options"
+            >Acceleration:
+          </label>
+          <input
+            type="range"
+            name="acc"
+            id="acc-input"
+            min="0.1"
+            max="20"
+            step="0.1"
+            value="1.2"
+            data-group="options"
+          />
+        </div>
+        <div class="form-row" data-group="options">
+          <label for="decel" id="decel-label" data-group="options"
+            >Deceleration:
+          </label>
+          <input
+            type="range"
+            name="decel"
+            id="decel-input"
+            min="0.01"
+            max="1"
+            step="0.01"
+            value="0.1"
+            data-group="options"
+          />
+        </div>
+        <div class="form-row" data-group="options">
+          <label for="turnspeed" id="turnspeed-label" data-group="options"
+            >TurnSpeed:
+          </label>
+          <input
+            type="range"
+            name="turnspeed"
+            id="turnspeed-input"
+            min="0.1"
+            max="3"
+            step="0.1"
+            value="0.3"
+            data-group="options"
+          />
+        </div>
+        <div class="form-row" data-group="options">
+          <label
+            for="particle-count"
+            id="particle-count-label"
+            data-group="options"
+            >Particles:
+          </label>
+          <input
+            type="range"
+            name="particle-count"
+            id="particle-count-input"
+            min="1"
+            max="50"
+            step="1"
+            value="5"
+            data-group="options"
+          />
+        </div>
       </div>
-      <div class="form-row" data-group="options">
-        <label for="acc" id="acc-label" data-group="options"
-          >Acceleration:
-        </label>
-        <input
-          type="range"
-          name="acc"
-          id="acc-input"
-          min="0.1"
-          max="3"
-          step="0.1"
-          value="1.2"
-          data-group="options"
-        />
-      </div>
-      <div class="form-row" data-group="options">
-        <label for="turnspeed" id="turnspeed-label" data-group="options"
-          >TurnSpeed:
-        </label>
-        <input
-          type="range"
-          name="turnspeed"
-          id="turnspeed-input"
-          min="0.1"
-          max="3"
-          step="0.1"
-          value="0.3"
-          data-group="options"
-        />
-      </div>
-      <div class="form-row">
-        <p class="controls-title">Controls</p>
-        <ul class="controls-list">
-          <li class="controls-list-item">W or &#8593; = Forward</li>
-          <li class="controls-list-item">S or &#8595; = Reverse</li>
-          <li class="controls-list-item">A or &#8592; = &#8634;</li>
-          <li class="controls-list-item">D or &#8594; = &#8635;</li>
-        </ul>
+      <div class="option-controls-wrapper" data-group="options">
+        <div class="form-row" data-group="options">
+          <p class="controls-title" data-group="options">Controls</p>
+          <ul class="controls-list" data-group="options">
+            <li class="controls-list-item" data-group="options">
+              <span class="controls-list-left-wrapper" data-group="options">
+                <p data-group="options">W</p>
+                or
+                <p data-group="options">&#8593;</p>
+                :
+              </span>
+              <span class="controls-list-right-wrapper" data-group="options"
+                >Forward</span
+              >
+            </li>
+            <li class="controls-list-item" data-group="options">
+              <span class="controls-list-left-wrapper" data-group="options">
+                <p data-group="options">S</p>
+                or
+                <p data-group="options">&#8595;</p>
+                :
+              </span>
+              <span class="controls-list-right-wrapper" data-group="options"
+                >Reverse</span
+              >
+            </li>
+            <li class="controls-list-item" data-group="options">
+              <span class="controls-list-left-wrapper" data-group="options">
+                <p data-group="options">A</p>
+                or
+                <p data-group="options">&#8592;</p>
+                :
+              </span>
+              <span class="controls-list-right-wrapper" data-group="options"
+                >&#8634;</span
+              >
+            </li>
+            <li class="controls-list-item" data-group="options">
+              <span class="controls-list-left-wrapper" data-group="options">
+                <p data-group="options">D</p>
+                or
+                <p data-group="options">&#8594;</p>
+                :
+              </span>
+              <span class="controls-list-right-wrapper" data-group="options"
+                >&#8635;</span
+              >
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-    <script>
-      const body = document.body;
-      const nameText = document.getElementById("name");
-      const options = document.getElementById("options");
-      const accInput = document.getElementById("acc-input");
-      const turnSpeedInput = document.getElementById("turnspeed-input");
-      const accLabel = document.getElementById("acc-label");
-      const turnSpeedLabel = document.getElementById("turnspeed-label");
-
-      let nameTextHue = Math.random() * 360;
-
-      class Player {
-        constructor(x, y) {
-          // canvases & contexts
-          this.canvas;
-          this.context;
-          this.particleCanvas;
-          this.particleContext;
-          //movement, speed & size
-          this.x = x;
-          this.y = y;
-          this.radius = 9;
-          this.velX = 0;
-          this.velY = 0;
-          this.angle = 0;
-          this.up = 0;
-          this.down = 0;
-          this.left = 0;
-          this.right = 0;
-          this.directionX = 0;
-          this.directionY = 0;
-          this.particleArr = [];
-          this.particlesPerFrame = 7;
-          // stats
-          this.maxScreenWidth = 2880;
-          this.health = 10;
-          this.damage = 1;
-          this.accDefaultValue = 0.4 + window.innerWidth / this.maxScreenWidth;
-          this.turnSpeedDefaultValue =
-            0.5 + window.innerWidth / this.maxScreenWidth;
-          this.decel = 0.1;
-          // color & style
-          this.hue = nameTextHue + 35;
-          this.saturation = 90;
-          this.brightness = 50;
-          this.cornerRadius = 5;
-          // initialize canvases
-          this.initCanvases();
-        }
-        initCanvases() {
-          //initialize particle canvas
-          const particleCanvas = document.createElement("canvas");
-          const particlectx = particleCanvas.getContext("2d");
-          particleCanvas.width = window.innerWidth;
-          particleCanvas.height = window.innerHeight;
-          particleCanvas.id = "canvas-particles";
-          document.body.appendChild(particleCanvas);
-          this.particleCanvas = particleCanvas;
-          this.particleContext = particlectx;
-          //initialize player canvas
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          canvas.id = "canvas-player";
-          document.body.appendChild(canvas);
-          this.canvas = canvas;
-          this.context = ctx;
-
-          // Initialize Screen Options
-          accInput.value = this.accDefaultValue;
-          turnSpeedInput.value = this.turnSpeedDefaultValue;
-        }
-        update() {
-          const newAcc = accInput.value;
-          const newturnSpeed = turnSpeedInput.value * 0.1;
-          if (mouse.isMobileControl === true) {
-            mouse.touchDiffX < -mouse.touchDeadzoneX ||
-            mouse.touchDiffX > mouse.touchDeadzoneX
-              ? (this.directionX = (mouse.touchDiffX / this.canvas.width) * 5)
-              : (this.directionX = 0);
-
-            mouse.touchDiffY < -mouse.touchDeadzoneY ||
-            mouse.touchDiffY > mouse.touchDeadzoneY
-              ? (this.directionY =
-                  -mouse.touchDiffY / (this.canvas.height * 0.1))
-              : (this.directionY = 0);
-
-            this.directionX > 1 && (this.directionX = 1);
-            this.directionX < -1 && (this.directionX = -1);
-            this.directionY > 1 && (this.directionY = 1);
-            this.directionY < -1 && (this.directionY = -1);
-          } else {
-            this.directionX = this.right - this.left;
-            this.directionY = this.up - this.down;
-          }
-          this.angle += this.directionX * newturnSpeed;
-          this.velX +=
-            Math.cos(this.angle) * this.directionY * newAcc -
-            this.velX * this.decel;
-          this.velY +=
-            Math.sin(this.angle) * this.directionY * newAcc -
-            this.velY * this.decel;
-          this.x += this.velX;
-          this.y += this.velY;
-        }
-        drawPlayer() {
-          const finalHue = nameTextHue + 35;
-          body.style.background = `radial-gradient(circle at ${this.x}px ${
-            this.y
-          }px, hsl(${nameTextHue - 45}, 10%, 5%), hsl(205, 5%, 0%) 40%)`;
-          this.context.save();
-          this.context.translate(this.x, this.y);
-          this.context.rotate(this.angle);
-          this.context.fillStyle = `hsl(${finalHue},${this.saturation}%,${this.brightness}%)`;
-          this.context.strokeStyle = `hsl(${finalHue},${this.saturation}%,${
-            this.brightness * 0.7
-          }%)`;
-          this.context.lineWidth = 0.5;
-          this.context.beginPath();
-          //nose point
-          this.context.moveTo(this.radius, 0);
-          //bottom right point
-          this.context.lineTo(-this.radius, this.radius * 0.9);
-          //bottom middle
-          this.context.lineTo(-this.radius * 0.618, 0);
-          //bottom left point
-          this.context.lineTo(-this.radius, -this.radius * 0.9);
-          this.context.closePath();
-          this.context.fill();
-          this.context.stroke();
-          this.context.restore();
-        }
-        animate() {
-          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          this.particleContext.clearRect(
-            0,
-            0,
-            this.canvas.width,
-            this.canvas.height
-          );
-          this.createParticle();
-          this.drawParticles();
-          this.drawPlayer();
-          this.update();
-          this.screenWrap();
-        }
-        createParticle() {
-          const particlesPerFrameAdjust = window.innerWidth / 1920;
-
-          for (
-            let i = 0;
-            i <
-            this.particlesPerFrame +
-              Math.floor(Math.abs(this.velX) + Math.abs(this.velY)) *
-                particlesPerFrameAdjust;
-            i++
-          ) {
-            this.particleArr.push(
-              new Particle(
-                this,
-                this.x,
-                this.y,
-                getRandomArbitrary(this.radius * 0.2, this.radius * 0.45),
-                getRandomArbitrary(this.radius * 0.15, this.radius * 0.2),
-                this.angle,
-                this.velX,
-                this.velY
-              )
-            );
-          }
-        }
-        drawParticles() {
-          for (let i = 0; i < this.particleArr.length; i++) {
-            const particle = this.particleArr[i];
-            particle.draw();
-            particle.update();
-          }
-        }
-        screenWrap() {
-          if (this.x + this.radius < 0)
-            this.x = this.canvas.width + this.radius;
-          if (this.x > this.canvas.width + this.radius) this.x = -this.radius;
-          if (this.y + this.radius < 0)
-            this.y = this.canvas.height + this.radius;
-          if (this.y > this.canvas.height + this.radius) this.y = -this.radius;
-        }
-        resize(width, height) {
-          this.canvas.width = width;
-          this.canvas.height = height;
-          this.particleCanvas.width = width;
-          this.particleCanvas.height = height;
-          this.x = width * 0.5;
-          this.y = height * 0.5;
-        }
-      }
-      class Particle {
-        constructor(player, x, y, radius, accel, angle, velX, velY) {
-          this.player = player;
-          this.context = this.player.particleContext;
-          this.x = x;
-          this.y = y;
-          this.velX = velX;
-          this.velY = velY;
-          this.normVel = this.velX * this.velX + this.velY * this.velY;
-          this.accel = accel;
-          this.decel = this.accel * 3;
-          this.jiggle = 1.5;
-          this.minThrottle = 0.1;
-          this.radius = radius;
-          this.hueAdjust = getRandomArbitrary(-20, 20);
-          this.saturation = getRandomArbitrary(90, 100);
-          this.brightness = getRandomArbitrary(40, 55);
-          this.alpha = 1;
-          this.angle = angle;
-          this.angleAdjust = Math.PI;
-        }
-        update() {
-          if (this.alpha <= 0.001 || this.radius < 0.001) {
-            this.player.particleArr.splice(this, 1);
-          } else {
-            this.x +=
-              Math.cos(this.angle + this.angleAdjust) * this.accel +
-              getRandomArbitrary(-this.jiggle, this.jiggle);
-            this.y +=
-              Math.sin(this.angle + this.angleAdjust) * this.accel +
-              getRandomArbitrary(-this.jiggle, this.jiggle);
-            this.radius *=
-              this.radius >= this.player.radius * 2
-                ? 1
-                : getRandomArbitrary(1.015, 1.025);
-            this.alpha *=
-              this.radius >= this.player.radius * 1.5
-                ? getRandomArbitrary(0.001, 0.99)
-                : getRandomArbitrary(0.8, 0.99);
-            this.saturation *= getRandomArbitrary(0.8, 0.99);
-            // this.brightness *= getRandomArbitrary(1.01, 1.05);
-            this.accel *= getRandomArbitrary(0.97, 0.99);
-          }
-        }
-        draw() {
-          this.context.save();
-          this.context.translate(this.x, this.y);
-          this.context.rotate(this.angle);
-          this.context.fillStyle = `hsla(${nameTextHue + this.hueAdjust}, ${
-            this.saturation
-          }%, ${this.brightness}%, ${this.alpha})`;
-          this.context.beginPath();
-          this.context.arc(
-            -this.player.radius,
-            0,
-            this.radius * 0.618,
-            0,
-            Math.PI * 2
-          );
-          // this.context.rect(-this.radius * 3, -this.radius * 0.5, this.radius, this.radius);
-          this.context.fill();
-          this.context.closePath();
-          this.context.restore();
-        }
-      }
-      class Star {
-        constructor(canvas, context) {
-          this.canvas = canvas;
-          this.context = context;
-          this.normalizedX =
-            (Math.random() * this.canvas.width) / this.canvas.width;
-          this.normalizedY =
-            (Math.random() * this.canvas.height) / this.canvas.height;
-          this.radius =
-            Math.random() > 0.5
-              ? getRandomArbitrary(0.4, 0.6)
-              : getRandomArbitrary(0.3, 1.1);
-          this.isShining =
-            Math.random() > 0.9 || this.radius > 0.8 ? true : false;
-          this.hue =
-            Math.random() > 0.6
-              ? getRandomArbitrary(0, 30)
-              : getRandomArbitrary(190, 220);
-          this.saturation = this.isShining
-            ? getRandomArbitrary(30, 70)
-            : getRandomArbitrary(10, 40);
-          this.brightness = getRandomArbitrary(60, 90);
-          this.alpha = getRandomArbitrary(0.4, 0.95);
-          this.counter = Math.random() * 10;
-          this.counterIncrement = Math.random() * 0.05;
-        }
-        draw() {
-          const osc = Math.sin(this.counter) * 0.7;
-          this.context.fillStyle = `hsla(${this.hue}, ${
-            this.saturation + osc * 50
-          }%, ${this.brightness}%, ${this.isShining ? 1 + osc : this.alpha})`;
-          this.context.beginPath();
-          this.context.rect(
-            this.normalizedX * this.canvas.width,
-            this.normalizedY * this.canvas.height,
-            this.radius,
-            this.radius
-          );
-          this.context.fill();
-          this.context.closePath();
-          this.counter += this.counterIncrement;
-        }
-        resize(canvas) {
-          this.canvas = canvas;
-        }
-      }
-      class Stars {
-        constructor() {
-          this.canvas;
-          this.context;
-          this.starArr = [];
-          this.starCount;
-          this.initCanvas();
-          this.createStars();
-        }
-        initCanvas() {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          canvas.id = "canvas-stars";
-          document.body.appendChild(canvas);
-          this.canvas = canvas;
-          this.context = ctx;
-        }
-        createStars() {
-          this.starArr = [];
-          this.starCount = this.canvas.width * 1.5;
-          for (let i = 0; i < this.starCount; i++) {
-            this.starArr.push(new Star(this.canvas, this.context));
-          }
-          this.drawStars();
-        }
-        drawStars() {
-          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          for (let i = 0; i < this.starArr.length; i++) {
-            const star = this.starArr[i];
-            star.draw();
-          }
-        }
-        resize(width, height) {
-          this.canvas.width = width;
-          this.canvas.height = height;
-          this.createStars();
-        }
-      }
-      class Mouse {
-        constructor(x, y, radius) {
-          this.canvas;
-          this.context;
-          this.x = x;
-          this.y = y;
-          this.radius = radius;
-          this.touchstartX;
-          this.touchstartY;
-          this.touchDiffX = 0;
-          this.touchDiffY = 0;
-          this.touchDeadzoneX = 30;
-          this.touchDeadzoneY = 20;
-          this.isMobileControl = false;
-          // color & style
-          this.hue = 0;
-          this.saturation = 80;
-          this.brightness = 50;
-          this.alpha = 1;
-          this.cornerRadius = 5;
-          this.shouldDraw = true;
-          this.initCanvas();
-        }
-        initCanvas() {
-          const mouseCanvas = document.createElement("canvas");
-          const mouseCtx = mouseCanvas.getContext("2d");
-          mouseCanvas.width = window.innerWidth;
-          mouseCanvas.height = window.innerHeight;
-          mouseCanvas.id = "canvas-mouse";
-          document.body.appendChild(mouseCanvas);
-          this.canvas = mouseCanvas;
-          this.context = mouseCtx;
-        }
-        update(x, y) {
-          this.x = x;
-          this.y = y;
-        }
-        draw() {
-          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          // current position
-          if (this.shouldDraw) {
-            this.context.fillStyle = `hsla(180,0%,0%,0.5)`;
-            this.context.strokeStyle = `hsla(180,0%,100%,0.5)`;
-            this.context.lineWidth = 1.5;
-            this.context.beginPath();
-            this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            this.context.stroke();
-            this.context.fill();
-            this.context.closePath();
-          }
-          // start position
-          if (this.touchstartX != this.x || this.touchstartY != this.y) {
-            this.context.fillStyle = `hsla(180,0%,100%,0.05)`;
-            this.context.strokeStyle = `hsla(180,0%,100%,0.1)`;
-            this.context.lineWidth = 1.5;
-            this.context.beginPath();
-            this.context.arc(
-              this.touchstartX,
-              this.touchstartY,
-              this.radius * 1.1,
-              0,
-              Math.PI * 2
-            );
-            this.context.stroke();
-            this.context.fill();
-            this.context.closePath();
-
-            this.context.beginPath();
-            this.context.moveTo(this.touchstartX, this.touchstartY);
-            this.context.lineTo(this.x, this.y);
-            this.context.stroke();
-            this.context.closePath();
-          }
-        }
-        resize(width, height) {
-          this.canvas.width = width;
-          this.canvas.height = height;
-        }
-      }
-      // Get random number between 2 numbers
-      function getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
-      }
-      // Update Name Text Color
-      function nameColorHandler() {
-        nameText.style.color = `hsl(${nameTextHue}, 100%, 50%)`;
-        nameTextHue += 0.05;
-      }
-      // EVENT LISTENERS
-      window.addEventListener("resize", () => {
-        player.resize(window.innerWidth, window.innerHeight);
-        mouse.resize(window.innerWidth, window.innerHeight);
-        stars.resize(window.innerWidth, window.innerHeight);
-      });
-      // Mouse Events
-      window.addEventListener("mousemove", (e) => {
-        mouse.shouldDraw = true;
-        if (e.target.dataset.group != "options") {
-          mouse.touchDiffX = e.clientX - mouse.touchstartX;
-          mouse.touchDiffY = e.clientY - mouse.touchstartY;
-          mouse.update(e.clientX, e.clientY);
-        }
-      });
-      window.addEventListener("mousedown", (e) => {
-        mouse.shouldDraw = true;
-        if (e.target.dataset.group != "options") {
-          e.preventDefault();
-          mouse.isMobileControl = window.innerWidth < 600 ? true : false;
-          mouse.touchstartX = e.clientX;
-          mouse.touchstartY = e.clientY;
-          mouse.update(e.clientX, e.clientY);
-        }
-      });
-      window.addEventListener("mouseup", (e) => {
-        mouse.shouldDraw = true;
-        e.preventDefault();
-        mouse.isMobileControl = false;
-        mouse.touchstartX = undefined;
-        mouse.touchstartY = undefined;
-        if (e.target.dataset.group != "options") {
-          mouse.touchDiffX = 0;
-          mouse.touchDiffY = 0;
-          mouse.update(e.clientX, e.clientY);
-        }
-      });
-      window.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-      });
-      // Touch Events
-      window.addEventListener("touchmove", (e) => {
-        mouse.shouldDraw = true;
-        mouse.isMobileControl = true;
-        if (e.target.dataset.group != "options") {
-          mouse.touchDiffX = e.changedTouches[0].clientX - mouse.touchstartX;
-          mouse.touchDiffY = e.changedTouches[0].clientY - mouse.touchstartY;
-          mouse.update(
-            e.changedTouches[0].clientX,
-            e.changedTouches[0].clientY
-          );
-        }
-      });
-      window.addEventListener("touchstart", (e) => {
-        mouse.shouldDraw = true;
-        mouse.isMobileControl = true;
-        if (e.target.dataset.group != "options") {
-          mouse.touchstartX = e.changedTouches[0].clientX;
-          mouse.touchstartY = e.changedTouches[0].clientY;
-          mouse.update(
-            e.changedTouches[0].clientX,
-            e.changedTouches[0].clientY
-          );
-        }
-      });
-      window.addEventListener("touchend", (e) => {
-        mouse.shouldDraw = false;
-        mouse.isMobileControl = false;
-        mouse.touchstartX = undefined;
-        mouse.touchstartY = undefined;
-        if (e.target.dataset.group != "options") {
-          mouse.touchDiffX = 0;
-          mouse.touchDiffY = 0;
-          mouse.update(
-            e.changedTouches[0].clientX,
-            e.changedTouches[0].clientY
-          );
-        }
-      });
-      // Key Events
-      window.addEventListener("keydown", (e) => {
-        if (e.code === "ShiftLeft") player.acc = 1.618;
-        if (e.code === "Space") player.isShooting = true;
-        switch (e.code) {
-          case "KeyW":
-          case "ArrowUp":
-            player.up = 1;
-            break;
-          case "KeyS":
-          case "ArrowDown":
-            player.down = 1;
-            break;
-          case "KeyA":
-          case "ArrowLeft":
-            player.left = 1;
-            break;
-          case "KeyD":
-          case "ArrowRight":
-            player.right = 1;
-            break;
-          default:
-            break;
-        }
-      });
-      window.addEventListener("keyup", (e) => {
-        if (e.code === "ShiftLeft") player.acc = 1;
-        if (e.code === "Space") player.isShooting = false;
-        switch (e.code) {
-          case "KeyW":
-          case "ArrowUp":
-            player.up = 0;
-            break;
-          case "KeyS":
-          case "ArrowDown":
-            player.down = 0;
-            break;
-          case "KeyA":
-          case "ArrowLeft":
-            player.left = 0;
-            break;
-          case "KeyD":
-          case "ArrowRight":
-            player.right = 0;
-            break;
-          default:
-            break;
-        }
-      });
-      // Options Events
-      accInput.addEventListener("wheel", (e) => {
-        if (e.wheelDeltaY > 0)
-          accInput.value = (parseFloat(accInput.value) + 0.1).toFixed(1);
-        if (e.wheelDeltaY < 0)
-          accInput.value = (parseFloat(accInput.value) - 0.1).toFixed(1);
-      });
-      turnSpeedInput.addEventListener("wheel", (e) => {
-        if (e.wheelDeltaY > 0)
-          turnSpeedInput.value = (
-            parseFloat(turnSpeedInput.value) + 0.01
-          ).toFixed(2);
-        if (e.wheelDeltaY < 0)
-          turnSpeedInput.value = (
-            parseFloat(turnSpeedInput.value) - 0.01
-          ).toFixed(2);
-      });
-      // Instantiate objects
-      const stars = new Stars();
-      const player = new Player(
-        window.innerWidth * 0.5,
-        window.innerHeight * 0.5
-      );
-      const mouse = new Mouse(0, 0, 10);
-      // MAIN FUNCTION
-      function animate() {
-        stars.drawStars();
-        player.animate();
-        // mouse.draw();
-        accLabel.innerText = `Acceleration: ${accInput.value}`;
-        turnSpeedLabel.innerText = `TurnSpeed: ${turnSpeedInput.value}`;
-        nameColorHandler();
-        requestAnimationFrame(animate);
-      }
-      animate();
-    </script>
+    <script src="app.js"></script>
   </body>
 </html>
