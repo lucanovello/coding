@@ -51,8 +51,8 @@ canvas {
   align-items: center;
   flex-direction: column;
   position: fixed;
-  top: calc(1.25em);
-  right: 0.5rem;
+  top: calc(0.5em + 1vh);
+  right: calc(0.5em + 1vw);
   background: none;
   border: none;
   border-radius: 5px;
@@ -111,7 +111,7 @@ canvas {
 
 .options-container {
   width: 350px;
-  min-width: 200px;
+  min-width: 250px;
   height: 100vh;
   padding: 100px 50px;
   display: flex;
@@ -121,12 +121,12 @@ canvas {
   position: fixed;
   top: 0;
   right: -350px;
-  background: hsla(200, 10%, 30%, 0.3);
+  background: hsla(220, 20%, 5%, 0.7);
   border-left: 2px dashed hsla(200, 10%, 50%, 0.6);
   border-radius: 10px 0 0 10px;
   row-gap: 5vh;
-  backdrop-filter: blur(7px) saturate(0.5);
-  -webkit-backdrop-filter: blur(7px) saturate(0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   overflow: auto;
   z-index: 99999;
   transition: 0.7s ease;
@@ -168,16 +168,18 @@ label {
   display: flex;
   justify-content: space-between;
   font-family: "Roboto", sans-serif;
-  font-size: calc(0.8rem + 0.1vw);
+  font-size: calc(0.9rem + 0.1vw);
   font-weight: 300;
   letter-spacing: 0.01em;
   text-align: left;
   text-transform: capitalize;
+  text-shadow: 0 0 3px black;
   color: white;
 }
 label span {
   font-family: "Poppins", sans-serif;
   font-weight: 900;
+  text-shadow: 0 0 3px black;
 }
 input {
   margin: 0.1em 0 0.8em;
@@ -188,15 +190,34 @@ input {
 .controls-title {
   width: 100%;
   font-family: "Poppins", sans-serif;
-  font-size: calc(1.5rem + 0.2vw);
+  font-size: calc(1.75rem + 0.2vw);
   font-weight: 900;
   letter-spacing: 0.02em;
   text-align: center;
   text-transform: uppercase;
   color: white;
-  text-decoration: underline 1px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* text-decoration: underline 1.5px solid;
+  text-underline-offset: 0.1em; */
 }
-
+.controls-title::before {
+  content: "";
+  width: 130%;
+  height: 1px;
+  /* background: white; */
+  border-top: 2px dotted hsl(0, 0%, 50%);
+}
+.controls-title::after {
+  content: "";
+  width: 130%;
+  height: 1px;
+  margin: 0 0 0.5em;
+  /* background: white; */
+  border-top: 2px dotted hsl(0, 0%, 50%);
+}
 .controls-list {
   width: 100%;
   display: flex;
@@ -204,13 +225,17 @@ input {
   align-items: flex-start;
   flex-direction: column;
   list-style: none;
-  line-height: 1.35em;
+  line-height: 2em;
+  row-gap: 0.5em;
 }
 .controls-list-item {
   width: 100%;
   font-family: "Poppins", sans-serif;
   font-size: calc(0.6rem + 0.2vw);
   font-weight: 200;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-shadow: 0 0 3px black;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -222,12 +247,19 @@ input {
   word-spacing: 1em;
 }
 .controls-list-left-wrapper p {
-  min-width: 3ch;
+  width: 3ch;
+  height: 3ch;
+  margin: 0 0.75ch;
   display: flex;
   justify-content: center;
-  font-size: calc(0.8rem + 0.2vw);
+  align-items: center;
+  justify-self: center;
+  align-self: center;
+  font-size: calc(1rem + 0.2vw);
   font-weight: 900;
-  letter-spacing: 0.2ch;
+  text-align: center;
+  border: 1px solid hsl(0, 0%, 50%);
+  border-radius: 5px;
 }
 .controls-list-left-wrapper p:last-of-type {
   margin-right: -0.5ch;
@@ -235,12 +267,18 @@ input {
 
 .controls-list-right-wrapper {
   width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+.controls-list-right-wrapper p {
+  width: 100%;
   padding-left: 1.5ch;
   display: flex;
-  justify-content: flex-start;
-  font-size: calc(0.8rem + 0.2vw);
+  justify-content: flex-end;
+  font-size: calc(1rem + 0.2vw);
   font-weight: 800;
 }
+
 .text-container {
   display: flex;
   justify-content: flex-start;
@@ -297,7 +335,6 @@ input {
     max-width: none;
     min-width: none;
     padding: 100px 15%;
-    background: hsla(200, 10%, 30%, 0.5);
     border: none;
     border-radius: 0;
     right: -100%;
