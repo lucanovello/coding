@@ -36,11 +36,80 @@ canvas {
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 #canvas-player,
-#canvas-particles {
+#canvas-particles,
+#canvas-coins {
   z-index: 9999;
 }
 #canvas-mouse {
   z-index: 999;
+}
+
+.text-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  z-index: 99;
+}
+
+.seneca-text,
+.name-text {
+  text-align: center;
+  letter-spacing: -0.01em;
+  line-height: 1.5em;
+  text-shadow: 0px 1px 2px black;
+}
+.seneca-text {
+  margin-bottom: 1vh;
+  font-size: calc(1.2rem + 1.4vw);
+  font-weight: 900;
+}
+.name-text {
+  font-size: calc(1.1rem + 1.4vw);
+  font-weight: 200;
+}
+.name-wrapper {
+  display: inline-flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.name {
+  margin-right: 0.05em;
+  display: inline-flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  font-size: calc(1.3rem + 1.4vw);
+  font-weight: 900;
+  text-align: center;
+  letter-spacing: -0.02em;
+  color: hsl(48, 100%, 50%);
+}
+
+.score-text-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  font-family: "Poppins", sans-serif;
+  font-size: calc(1rem + 1vw);
+  font-weight: 900;
+}
+.score-text-title {
+  margin-right: 1vw;
+  font-family: "Poppins", sans-serif;
+  color: hsl(45, 100%, 50%);
+}
+.score-text-results {
+  font-family: "Poppins", sans-serif;
+  color: white;
 }
 
 .options-icon-wrapper {
@@ -277,53 +346,6 @@ input {
   justify-content: flex-end;
   font-size: calc(1rem + 0.2vw);
   font-weight: 800;
-}
-
-.text-container {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  color: white;
-  font-family: "Poppins", sans-serif;
-  text-align: center;
-  z-index: 99;
-}
-
-.seneca-text,
-.name-text {
-  text-align: center;
-  letter-spacing: -0.01em;
-  line-height: 1.5em;
-  text-shadow: 0px 1px 2px black;
-}
-.seneca-text {
-  margin-bottom: 1vh;
-  font-size: calc(0.8rem + 1.4vw);
-  font-weight: 900;
-}
-.name-text {
-  font-size: calc(0.6rem + 1.4vw);
-  font-weight: 200;
-}
-.name-wrapper {
-  display: inline-flex;
-  justify-content: center;
-  align-items: baseline;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-}
-.name {
-  margin-right: 0.05em;
-  display: inline-flex;
-  justify-content: center;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  font-size: calc(0.7rem + 1.4vw);
-  font-weight: 900;
-  text-align: center;
-  letter-spacing: -0.02em;
-  color: hsl(48, 100%, 50%);
 }
 
 @media (max-width: 950px) {

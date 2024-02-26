@@ -14,13 +14,14 @@ class UserInterface {
     this.optionsIconWrapper = document.getElementById("options-icon-wrapper");
     this.optionsIconTop = document.getElementById("options-icon-top");
     this.optionsIconBottom = document.getElementById("options-icon-bottom");
+    this.scoreTextResults = document.getElementById("score-text-results");
     this.mainHue = Math.random() * 360;
     this.mainHueIncrement = 0.05;
     this.isOptionsOpen = false;
     this.initEvents();
   }
   initEvents() {
-    // Window Event
+    // Window Event **************************************************************************************************************
     window.addEventListener("resize", () => {
       player.resize(window.innerWidth, window.innerHeight);
       mouse.resize(window.innerWidth, window.innerHeight);
@@ -29,7 +30,7 @@ class UserInterface {
     window.addEventListener("contextmenu", (e) => {
       e.preventDefault();
     });
-    // Touch Events
+    // Touch Events **************************************************************************************************************
     window.addEventListener("touchmove", (e) => {
       mouse.isMobileControl = true;
       if (e.target.dataset.group != "options") {
@@ -39,7 +40,6 @@ class UserInterface {
       }
     });
     window.addEventListener("touchstart", (e) => {
-      console.log(e.target);
       if (e.target.dataset.group != "options") {
         mouse.shouldDraw = true;
       }
@@ -63,7 +63,7 @@ class UserInterface {
         mouse.update(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
       }
     });
-    // Key Events
+    // Key Events **************************************************************************************************************
     window.addEventListener("keydown", (e) => {
       if (e.code === "ShiftLeft") player.acc = 1.618;
       if (e.code === "Space") player.isShooting = true;
@@ -135,9 +135,13 @@ class UserInterface {
       this.mobileNavCloseHandler();
     });
   }
-  updateNameColor() {
+  update(player) {
+    // Change name color **************************************************************************************************************
     this.nameText.style.color = `hsl(${this.mainHue}, 100%, 50%)`;
     this.mainHue += this.mainHueIncrement;
+
+    // Update Score **************************************************************************************************************
+    this.scoreTextResults.innerText = player.score;
   }
   mobileNavCloseHandler() {
     if (!this.isOptionsOpen) {
@@ -159,14 +163,14 @@ class UserInterface {
 }
 class Player {
   constructor(x, y, mainHue, particleCount) {
-    // Canvases & Contexts
+    // Canvases & Contexts **************************************************************************************************************
     this.canvas;
     this.context;
     this.coinCanvas;
     this.coinContext;
     this.particleCanvas;
     this.particleContext;
-    // Movement, Speed & Size
+    // Movement, Speed & Size **************************************************************************************************************
     this.x = x;
     this.y = y;
     this.radius = 9;
@@ -181,19 +185,19 @@ class Player {
     this.directionY = 0;
     this.particleArr = [];
     this.particlesCount = particleCount;
-    // Stats
+    // Stats **************************************************************************************************************
     this.maxScreenWidth = 2880;
     this.health = 10;
     this.damage = 1;
-    this.accDefaultValue = 1.0;
+    this.accDefaultValue = 0.7;
     this.decelDefaultValue = 0.1;
-    this.turnSpeedDefaultValue = 1.0;
+    this.turnSpeedDefaultValue = 0.8;
     this.particleCountDefaultValue = 20;
     this.decel = 0.1;
-    // Coins
+    // Coins **************************************************************************************************************
     this.coinArr = [];
-    this.coinScore = 0;
-    // Color & Style
+    this.score = 0;
+    // Color & Style **************************************************************************************************************
     this.hue = mainHue + 35;
     this.saturation = 90;
     this.brightness = 50;
@@ -201,7 +205,7 @@ class Player {
     this.initCanvases();
   }
   initCanvases() {
-    // Initialize Particle Canvas
+    // Initialize Particle Canvas **************************************************************************************************************
     const particleCanvas = document.createElement("canvas");
     const particlectx = particleCanvas.getContext("2d");
     particleCanvas.width = window.innerWidth;
@@ -210,7 +214,7 @@ class Player {
     document.body.appendChild(particleCanvas);
     this.particleCanvas = particleCanvas;
     this.particleContext = particlectx;
-    // Initialize Player Canvas
+    // Initialize Player Canvas **************************************************************************************************************
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     canvas.width = window.innerWidth;
@@ -219,7 +223,7 @@ class Player {
     document.body.appendChild(canvas);
     this.canvas = canvas;
     this.context = ctx;
-    // Initialize Coin Canvas
+    // Initialize Coin Canvas **************************************************************************************************************
     const coinCanvas = document.createElement("canvas");
     const coinCtx = coinCanvas.getContext("2d");
     coinCanvas.width = window.innerWidth;
@@ -228,7 +232,7 @@ class Player {
     document.body.appendChild(coinCanvas);
     this.coinCanvas = coinCanvas;
     this.coinContext = coinCtx;
-    // Initialize Screen Options
+    // Initialize Screen Options **************************************************************************************************************
     userInterface.accInput.value = this.accDefaultValue;
     userInterface.decelInput.value = this.decelDefaultValue;
     userInterface.turnSpeedInput.value = this.turnSpeedDefaultValue;
@@ -262,6 +266,22 @@ class Player {
       Math.sin(this.angle) * this.directionY * newAcc - this.velY * newDecel;
     this.x += this.velX / this.canvas.width;
     this.y += this.velY / this.canvas.height;
+    // Update Score **************************************************************************************************************
+    if (
+      this.x * this.coinCanvas.width - this.radius >
+        this.coinArr[0].x * this.coinCanvas.width - this.coinArr[0].radius &&
+      this.x * this.coinCanvas.width + this.radius <
+        this.coinArr[0].x * this.coinCanvas.width + this.coinArr[0].radius &&
+      this.y * this.coinCanvas.width - this.radius >
+        this.coinArr[0].y * this.coinCanvas.width - this.coinArr[0].radius &&
+      this.y * this.coinCanvas.width + this.radius <
+        this.coinArr[0].y * this.coinCanvas.width + this.coinArr[0].radius
+    ) {
+      this.score += 1;
+      this.coinArr = [];
+    }
+    if (this.coinArr[0]) {
+    }
   }
   drawPlayer(mainHue) {
     const finalHue = mainHue + 35;
@@ -282,13 +302,13 @@ class Player {
     }%)`;
     this.context.lineWidth = 0.5;
     this.context.beginPath();
-    // Nose point
+    // Nose point **************************************************************************************************************
     this.context.moveTo(this.radius, 0);
-    // Bottom right point
+    // Bottom right point **************************************************************************************************************
     this.context.lineTo(-this.radius, this.radius * 0.9);
-    // Bottom middle
+    // Bottom middle **************************************************************************************************************
     this.context.lineTo(-this.radius * 0.618, 0);
-    // Bottom left point
+    // Bottom left point **************************************************************************************************************
     this.context.lineTo(-this.radius, -this.radius * 0.9);
     this.context.closePath();
     this.context.fill();
@@ -336,7 +356,7 @@ class Player {
           this.coinContext,
           getRandomRange(0.1, 0.9),
           getRandomRange(0.1, 0.9),
-          player.radius * 4
+          player.radius * 5
         )
       );
     }
@@ -354,19 +374,21 @@ class Player {
     }
   }
   screenWrap() {
-    const radiusX = this.radius / this.canvas.width;
-    const radiusY = this.radius / this.canvas.height;
-    if (this.x < -radiusX) {
-      this.x = 1.0 + radiusX;
+    const radius = {
+      x: this.radius / this.canvas.width,
+      y: this.radius / this.canvas.height,
+    };
+    if (this.x < -radius.x) {
+      this.x = 1.0 + radius.x;
     }
-    if (this.x > 1.0 + radiusX) {
-      this.x = -radiusX;
+    if (this.x > 1.0 + radius.x) {
+      this.x = -radius.x;
     }
-    if (this.y < -radiusY) {
-      this.y = 1.0 + radiusY;
+    if (this.y < -radius.y) {
+      this.y = 1.0 + radius.y;
     }
-    if (this.y > 1.0 + radiusY) {
-      this.y = -radiusY;
+    if (this.y > 1.0 + radius.y) {
+      this.y = -radius.y;
     }
   }
   resize(width, height) {
@@ -449,47 +471,74 @@ class Coin {
   constructor(canvas, context, x, y, radius) {
     this.canvas = canvas;
     this.context = context;
-    this.normalizedX = x;
-    this.normalizedY = y;
+    this.x = x;
+    this.y = y;
     this.radius = radius;
-    this.hue = 47;
+    this.radiusX = radius * 0.25;
+    this.hue = 45;
     this.saturation = 100;
     this.brightness = 50;
     this.alpha = 1;
     this.counter = 0;
+    this.spinSpeed = 0.1;
   }
   update;
   draw() {
-    const x = this.normalizedX * this.canvas.width;
-    const y = this.normalizedY * this.canvas.height;
-    const radiusAdjust = this.radius * 0.25;
+    const x = this.x * this.canvas.width;
+    const y = this.y * this.canvas.height;
     const osc = Math.sin(this.counter);
-    this.context.fillStyle = `hsla(${this.hue}, ${this.saturation}%, ${this.brightness}%, ${this.alpha})`;
+    const normOsc = (1 + osc) * 0.5;
+    this.context.fillStyle = `hsla(${this.hue}, ${
+      this.saturation - normOsc * 50
+    }%, ${this.brightness - normOsc * 30}%, ${this.alpha})`;
+    this.context.strokeStyle = `hsla(${this.hue}, ${this.saturation}%, ${
+      this.brightness + 20
+    }%, ${this.alpha})`;
     this.context.beginPath();
-    // CIRCLE SHAPE
-    // this.context.moveTo((x - radiusAdjust) + (radiusAdjust * osc), y);
-    // this.context.quadraticCurveTo((x - radiusAdjust) + (radiusAdjust * osc), y - this.radius, x, y - this.radius);
-    // this.context.quadraticCurveTo((x + radiusAdjust) + (radiusAdjust * -osc), y - this.radius, (x + radiusAdjust) + (radiusAdjust * -osc), y);
-    // this.context.quadraticCurveTo((x + radiusAdjust) + (radiusAdjust * -osc), y + this.radius, x, y + this.radius);
-    // this.context.quadraticCurveTo((x - radiusAdjust) + (radiusAdjust * osc), y + this.radius, (x - radiusAdjust) + (radiusAdjust * osc), y);
-    // DIAMOND SHAPE
-    this.context.moveTo(x - radiusAdjust + radiusAdjust * osc, y);
+    // CIRCLE SHAPE **************************************************************************************************************
+    // this.context.moveTo(x - this.radiusX + this.radiusX * osc, y);
+    // this.context.quadraticCurveTo(
+    //   x - this.radiusX + this.radiusX * osc,
+    //   y - this.radius,
+    //   x,
+    //   y - this.radius
+    // );
+    // this.context.quadraticCurveTo(
+    //   x + this.radiusX + this.radiusX * -osc,
+    //   y - this.radius,
+    //   x + this.radiusX + this.radiusX * -osc,
+    //   y
+    // );
+    // this.context.quadraticCurveTo(
+    //   x + this.radiusX + this.radiusX * -osc,
+    //   y + this.radius,
+    //   x,
+    //   y + this.radius
+    // );
+    // this.context.quadraticCurveTo(
+    //   x - this.radiusX + this.radiusX * osc,
+    //   y + this.radius,
+    //   x - this.radiusX + this.radiusX * osc,
+    //   y
+    // );
+    // DIAMOND SHAPE **************************************************************************************************************
+    this.context.moveTo(x - this.radiusX + this.radiusX * osc, y);
     this.context.lineTo(x, y - this.radius * 0.5);
-    this.context.lineTo(x + radiusAdjust + radiusAdjust * -osc, y);
+    this.context.lineTo(x + this.radiusX + this.radiusX * -osc, y);
     this.context.lineTo(x, y + this.radius * 0.5);
-    this.context.lineTo(x + -radiusAdjust + radiusAdjust * osc, y);
+    this.context.lineTo(x + -this.radiusX + this.radiusX * osc, y);
     this.context.fill();
+    this.context.stroke();
     this.context.closePath();
-    this.counter += 0.05;
+    this.counter += this.spinSpeed;
   }
 }
 class Star {
   constructor(canvas, context) {
     this.canvas = canvas;
     this.context = context;
-    this.normalizedX = (Math.random() * this.canvas.width) / this.canvas.width;
-    this.normalizedY =
-      (Math.random() * this.canvas.height) / this.canvas.height;
+    this.x = (Math.random() * this.canvas.width) / this.canvas.width;
+    this.y = (Math.random() * this.canvas.height) / this.canvas.height;
     this.radius =
       Math.random() > 0.5 ? getRandomRange(0.4, 0.6) : getRandomRange(0.3, 1.1);
     this.isShining = Math.random() > 0.9 || this.radius > 0.8 ? true : false;
@@ -510,8 +559,8 @@ class Star {
     }%, ${this.brightness}%, ${this.isShining ? 1 + osc : this.alpha})`;
     this.context.beginPath();
     this.context.rect(
-      this.normalizedX * this.canvas.width,
-      this.normalizedY * this.canvas.height,
+      this.x * this.canvas.width,
+      this.y * this.canvas.height,
       this.radius,
       this.radius
     );
@@ -577,7 +626,7 @@ class Mouse {
     this.touchDeadzoneX = 15;
     this.touchDeadzoneY = 10;
     this.isMobileControl = false;
-    // color & style
+    // color & style **************************************************************************************************************
     this.hue = 0;
     this.saturation = 80;
     this.brightness = 50;
@@ -602,7 +651,7 @@ class Mouse {
   }
   draw() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    // current position
+    // current position **************************************************************************************************************
     if (this.shouldDraw) {
       this.context.fillStyle = `hsla(180,0%,0%,0.5)`;
       this.context.strokeStyle = `hsla(180,0%,100%,0.5)`;
@@ -612,7 +661,7 @@ class Mouse {
       this.context.stroke();
       this.context.fill();
       this.context.closePath();
-      // start position
+      // start position **************************************************************************************************************
       if (this.touchstartX != this.x || this.touchstartY != this.y) {
         this.context.fillStyle = `hsla(180,0%,100%,0.05)`;
         this.context.strokeStyle = `hsla(180,0%,100%,0.1)`;
@@ -643,7 +692,7 @@ class Mouse {
   }
 }
 
-// Instantiate objects
+// Instantiate objects **************************************************************************************************************
 const userInterface = new UserInterface();
 const stars = new Stars();
 const player = new Player(
@@ -659,19 +708,19 @@ function getRandomRange(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-// MAIN FUNCTION ************************************************
+// MAIN FUNCTION **********************************************************************************************************************************
 function animate() {
   stars.drawStars();
-  userInterface.updateNameColor();
+  userInterface.update(player);
   player.animate(
     mouse,
     userInterface.mainHue,
     userInterface.particleCountInput.value
   );
   mouse.draw();
-  // if (player.coinArr.length > 0) {
-  //   player.drawCoins();
-  // }
+  if (player.coinArr.length > 0) {
+    player.drawCoins();
+  }
   userInterface.accLabel.innerHTML = `Acceleration: <span>${userInterface.accInput.value}</span>`;
   userInterface.decelLabel.innerHTML = `Deceleration: <span>${userInterface.decelInput.value}</span>`;
   userInterface.turnSpeedLabel.innerHTML = `TurnSpeed: <span>${userInterface.turnSpeedInput.value}</span>`;
