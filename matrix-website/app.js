@@ -30,10 +30,6 @@ class UserInterface {
   }
   initEvents() {
     // Window Event **************************************************************************************************************
-    window.addEventListener("load", (e) => {
-      this.sendDataToServer();
-    });
-
     window.addEventListener("resize", () => {
       player.resize(window.innerWidth, window.innerHeight);
       mouse.resize(window.innerWidth, window.innerHeight);
@@ -150,6 +146,8 @@ class UserInterface {
   update(player) {
     // Change name color **************************************************************************************************************
     this.nameText.style.color = `hsl(${this.mainHue}, 100%, 50%)`;
+    this.scoreTextTitle.style.color = `hsl(${this.mainHue}, 100%, 50%)`;
+    this.highScoreTextTitle.style.color = `hsl(${this.mainHue}, 100%, 50%)`;
     this.mainHue += this.mainHueIncrement;
 
     // Update Score **************************************************************************************************************
@@ -172,28 +170,6 @@ class UserInterface {
       element.value = (parseFloat(element.value) + increment).toFixed(fixedTo);
     if (e.wheelDeltaY < 0)
       element.value = (parseFloat(element.value) - increment).toFixed(fixedTo);
-  }
-  sendDataToServer() {
-    const highScore = localStorage.getItem("highScore");
-    if (highScore) {
-      fetch("/save-to-file", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ value: highScore }),
-      })
-        .then((response) => {
-          if (response.ok) {
-            console.log("Value saved to file on the server.");
-          } else {
-            console.error("Failed to save value to file on the server.");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
   }
 }
 class Player {
