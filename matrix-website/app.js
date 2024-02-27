@@ -14,14 +14,26 @@ class UserInterface {
     this.optionsIconWrapper = document.getElementById("options-icon-wrapper");
     this.optionsIconTop = document.getElementById("options-icon-top");
     this.optionsIconBottom = document.getElementById("options-icon-bottom");
+    this.scoreTextTitle = document.getElementById("score-text-title");
+    this.highScoreTextTitle = document.getElementById("high-score-text-title");
     this.scoreTextResults = document.getElementById("score-text-results");
+    this.highScoreTextResults = document.getElementById(
+      "high-score-text-results"
+    );
     this.mainHue = Math.random() * 360;
     this.mainHueIncrement = 0.05;
     this.isOptionsOpen = false;
+    this.init();
+  }
+  init() {
     this.initEvents();
   }
   initEvents() {
     // Window Event **************************************************************************************************************
+    window.addEventListener("load", (e) => {
+      this.sendDataToServer();
+    });
+
     window.addEventListener("resize", () => {
       player.resize(window.innerWidth, window.innerHeight);
       mouse.resize(window.innerWidth, window.innerHeight);
@@ -142,6 +154,7 @@ class UserInterface {
 
     // Update Score **************************************************************************************************************
     this.scoreTextResults.innerText = player.score;
+    this.highScoreTextResults.innerText = player.highScore;
   }
   mobileNavCloseHandler() {
     if (!this.isOptionsOpen) {
@@ -159,6 +172,28 @@ class UserInterface {
       element.value = (parseFloat(element.value) + increment).toFixed(fixedTo);
     if (e.wheelDeltaY < 0)
       element.value = (parseFloat(element.value) - increment).toFixed(fixedTo);
+  }
+  sendDataToServer() {
+    const highScore = localStorage.getItem("highScore");
+    if (highScore) {
+      fetch("/save-to-file", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ value: highScore }),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("Value saved to file on the server.");
+          } else {
+            console.error("Failed to save value to file on the server.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
   }
 }
 class Player {
@@ -197,14 +232,16 @@ class Player {
     // Coins **************************************************************************************************************
     this.coinArr = [];
     this.score = 0;
+    this.highScore = 0;
+    this.coinSpawnTime = 500;
     // Color & Style **************************************************************************************************************
     this.hue = mainHue + 35;
     this.saturation = 90;
     this.brightness = 50;
     this.cornerRadius = 5;
-    this.initCanvases();
+    this.init();
   }
-  initCanvases() {
+  init() {
     // Initialize Particle Canvas **************************************************************************************************************
     const particleCanvas = document.createElement("canvas");
     const particlectx = particleCanvas.getContext("2d");
@@ -237,6 +274,15 @@ class Player {
     userInterface.decelInput.value = this.decelDefaultValue;
     userInterface.turnSpeedInput.value = this.turnSpeedDefaultValue;
     userInterface.particleCountInput.value = this.particleCountDefaultValue;
+
+    // Get highscore from local storage **************************************************************************************************************
+    if (localStorage.getItem("highScore") > this.highScore) {
+      this.highScore = localStorage.getItem("highScore");
+    } else {
+      localStorage.setItem("highScore", `${this.highScore}`);
+    }
+
+    this.createCoins();
   }
   update(mouse) {
     const newAcc = userInterface.accInput.value;
@@ -268,6 +314,7 @@ class Player {
     this.y += this.velY / this.canvas.height;
     // Update Score **************************************************************************************************************
     if (
+      this.coinArr[0] &&
       this.x * this.coinCanvas.width - this.radius >
         this.coinArr[0].x * this.coinCanvas.width - this.coinArr[0].radius &&
       this.x * this.coinCanvas.width + this.radius <
@@ -278,9 +325,14 @@ class Player {
         this.coinArr[0].y * this.coinCanvas.width + this.coinArr[0].radius
     ) {
       this.score += 1;
+      if (this.score > this.highScore) {
+        this.highScore = this.score;
+        localStorage.setItem("highScore", `${this.highScore}`);
+      }
       this.coinArr = [];
-    }
-    if (this.coinArr[0]) {
+      setTimeout(() => {
+        this.createCoins();
+      }, this.coinSpawnTime);
     }
   }
   drawPlayer(mainHue) {
@@ -321,7 +373,6 @@ class Player {
     this.createParticle(particleCount);
     this.drawParticles(mainHue);
     this.drawPlayer(mainHue);
-    this.createCoins();
     this.update(mouse);
     this.screenWrap();
   }
@@ -349,27 +400,27 @@ class Player {
     }
   }
   createCoins() {
-    if (this.coinArr.length == 0) {
-      this.coinArr.push(
-        new Coin(
-          this.coinCanvas,
-          this.coinContext,
-          getRandomRange(0.1, 0.9),
-          getRandomRange(0.1, 0.9),
-          player.radius * 5
-        )
-      );
-    }
+    // if (this.coinArr.length == 0) {
+    this.coinArr.push(
+      new Coin(
+        this.coinCanvas,
+        this.coinContext,
+        getRandomRange(0.1, 0.9),
+        getRandomRange(0.1, 0.9),
+        this.radius * 5
+      )
+    );
+    // }
   }
   drawCoins() {
+    this.coinContext.clearRect(
+      0,
+      0,
+      this.coinCanvas.width,
+      this.coinCanvas.height
+    );
     for (let i = 0; i < this.coinArr.length; i++) {
       const coin = this.coinArr[i];
-      this.coinContext.clearRect(
-        0,
-        0,
-        this.coinCanvas.width,
-        this.coinCanvas.height
-      );
       coin.draw();
     }
   }
@@ -482,7 +533,6 @@ class Coin {
     this.counter = 0;
     this.spinSpeed = 0.1;
   }
-  update;
   draw() {
     const x = this.x * this.canvas.width;
     const y = this.y * this.canvas.height;
@@ -718,9 +768,9 @@ function animate() {
     userInterface.particleCountInput.value
   );
   mouse.draw();
-  if (player.coinArr.length > 0) {
-    player.drawCoins();
-  }
+
+  player.drawCoins();
+
   userInterface.accLabel.innerHTML = `Acceleration: <span>${userInterface.accInput.value}</span>`;
   userInterface.decelLabel.innerHTML = `Deceleration: <span>${userInterface.decelInput.value}</span>`;
   userInterface.turnSpeedLabel.innerHTML = `TurnSpeed: <span>${userInterface.turnSpeedInput.value}</span>`;
