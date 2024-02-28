@@ -42,8 +42,10 @@ class UserInterface {
     window.addEventListener("touchmove", (e) => {
       mouse.isMobileControl = true;
       if (e.target.dataset.group != "options") {
-        mouse.touchDiffX = e.changedTouches[0].clientX - mouse.touchstartX;
-        mouse.touchDiffY = e.changedTouches[0].clientY - mouse.touchstartY;
+        mouse.touchendX = e.changedTouches[0].clientX;
+        mouse.touchendY = e.changedTouches[0].clientY;
+        mouse.touchDiffX = mouse.touchendX - mouse.touchstartX;
+        mouse.touchDiffY = mouse.touchendY - mouse.touchstartY;
         mouse.update(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
       }
     });
@@ -63,6 +65,8 @@ class UserInterface {
       mouse.context.clearRect(0, 0, mouse.canvas.width, mouse.canvas.height);
 
       mouse.isMobileControl = false;
+      mouse.touchendX = e.changedTouches[0].clientX;
+      mouse.touchendY = e.changedTouches[0].clientY;
       mouse.touchstartX = undefined;
       mouse.touchstartY = undefined;
       if (e.target.dataset.group != "options") {
@@ -171,6 +175,7 @@ class UserInterface {
     if (e.wheelDeltaY < 0)
       element.value = (parseFloat(element.value) - increment).toFixed(fixedTo);
   }
+  optionsOnChangeHandler() {}
 }
 class Player {
   constructor(x, y, mainHue, particleCount) {
@@ -187,6 +192,27 @@ class Player {
     this.radius = 9;
     this.velX = 0;
     this.velY = 0;
+    this.acc = {
+      min: 0.1,
+      max: 10,
+      step: 0.1,
+      value: 1,
+      normMultiplier: 10,
+    };
+    this.decel = {
+      min: 0.01,
+      max: 1,
+      step: 0.01,
+      value: 0.1,
+      normMultiplier: 100,
+    };
+    this.turnSpeed = {
+      min: 0.005,
+      max: 0.5,
+      step: 0.005,
+      value: 0.1,
+      normMultiplier: 200,
+    };
     this.angle = 0;
     this.up = 0;
     this.down = 0;
@@ -200,11 +226,8 @@ class Player {
     this.maxScreenWidth = 2880;
     this.health = 10;
     this.damage = 1;
-    this.accDefaultValue = 0.7;
-    this.decelDefaultValue = 0.1;
-    this.turnSpeedDefaultValue = 0.8;
     this.particleCountDefaultValue = 20;
-    this.decel = 0.1;
+
     // Coins **************************************************************************************************************
     this.coinArr = [];
     this.score = 0;
@@ -246,9 +269,24 @@ class Player {
     this.coinCanvas = coinCanvas;
     this.coinContext = coinCtx;
     // Initialize Screen Options **************************************************************************************************************
-    userInterface.accInput.value = this.accDefaultValue;
-    userInterface.decelInput.value = this.decelDefaultValue;
-    userInterface.turnSpeedInput.value = this.turnSpeedDefaultValue;
+    userInterface.accInput.min = this.acc.min * this.acc.normMultiplier;
+    userInterface.accInput.max = this.acc.max * this.acc.normMultiplier;
+    userInterface.accInput.step = this.acc.step * this.acc.normMultiplier;
+    userInterface.accInput.value = this.acc.value * this.acc.normMultiplier;
+    userInterface.decelInput.min = this.decel.min * this.decel.normMultiplier;
+    userInterface.decelInput.max = this.decel.max * this.decel.normMultiplier;
+    userInterface.decelInput.step = this.decel.step * this.decel.normMultiplier;
+    userInterface.decelInput.value =
+      this.decel.value * this.decel.normMultiplier;
+    userInterface.turnSpeedInput.min =
+      this.turnSpeed.min * this.turnSpeed.normMultiplier;
+    userInterface.turnSpeedInput.max =
+      this.turnSpeed.max * this.turnSpeed.normMultiplier;
+    userInterface.turnSpeedInput.step =
+      this.turnSpeed.step * this.turnSpeed.normMultiplier;
+    userInterface.turnSpeedInput.value =
+      this.turnSpeed.value * this.turnSpeed.normMultiplier;
+
     userInterface.particleCountInput.value = this.particleCountDefaultValue;
 
     // Get highscore from local storage **************************************************************************************************************
@@ -260,32 +298,53 @@ class Player {
 
     this.createCoins();
   }
-  update(mouse) {
-    const newAcc = userInterface.accInput.value;
-    const newDecel = userInterface.decelInput.value;
-    const newturnSpeed = userInterface.turnSpeedInput.value * 0.1;
+  update(mouse, userInterface, mainHue, particleCount) {
+    this.createParticle(particleCount);
+    this.updateMovement(mouse, userInterface);
+    this.screenWrap();
+    this.draw(mainHue);
+  }
+  updateMovement(mouse, userInterface) {
+    if (userInterface) {
+      this.acc.value = userInterface.accInput.value / this.acc.normMultiplier;
+      this.decel.value =
+        userInterface.decelInput.value / this.decel.normMultiplier;
+      this.turnSpeed.value =
+        userInterface.turnSpeedInput.value / this.turnSpeed.normMultiplier;
+    }
     if (mouse.isMobileControl === true) {
-      mouse.touchDiffX < -mouse.touchDeadzoneX ||
-      mouse.touchDiffX > mouse.touchDeadzoneX
-        ? (this.directionX = (mouse.touchDiffX / this.canvas.width) * 5)
-        : (this.directionX = 0);
-      mouse.touchDiffY < -mouse.touchDeadzoneY ||
-      mouse.touchDiffY > mouse.touchDeadzoneY
-        ? (this.directionY = -mouse.touchDiffY / (this.canvas.height * 0.1))
-        : (this.directionY = 0);
+      if (
+        mouse.touchDiffX < -mouse.touchDeadzoneX ||
+        mouse.touchDiffX > mouse.touchDeadzoneX ||
+        mouse.touchDiffY < -mouse.touchDeadzoneY ||
+        mouse.touchDiffY > mouse.touchDeadzoneY
+      ) {
+        this.angle = Math.atan2(
+          mouse.touchendY - mouse.touchstartY,
+          mouse.touchendX - mouse.touchstartX
+        );
+        this.directionY = -mouse.touchDiffY / (this.canvas.height * 0.1);
+      }
       this.directionX > 1 && (this.directionX = 1);
       this.directionX < -1 && (this.directionX = -1);
       this.directionY > 1 && (this.directionY = 1);
       this.directionY < -1 && (this.directionY = -1);
+      this.velX +=
+        Math.cos(this.angle) * this.acc.value - this.velX * this.decel.value;
+      this.velY +=
+        Math.sin(this.angle) * this.acc.value - this.velY * this.decel.value;
     } else {
       this.directionX = this.right - this.left;
       this.directionY = this.up - this.down;
+      this.angle += this.directionX * this.turnSpeed.value;
+      this.velX +=
+        Math.cos(this.angle) * this.directionY * this.acc.value -
+        this.velX * this.decel.value;
+      this.velY +=
+        Math.sin(this.angle) * this.directionY * this.acc.value -
+        this.velY * this.decel.value;
     }
-    this.angle += this.directionX * newturnSpeed;
-    this.velX +=
-      Math.cos(this.angle) * this.directionY * newAcc - this.velX * newDecel;
-    this.velY +=
-      Math.sin(this.angle) * this.directionY * newAcc - this.velY * newDecel;
+
     this.x += this.velX / this.canvas.width;
     this.y += this.velY / this.canvas.height;
     // Update Score **************************************************************************************************************
@@ -311,7 +370,12 @@ class Player {
       }, this.coinSpawnTime);
     }
   }
+  draw(mainHue) {
+    this.drawParticles(mainHue);
+    this.drawPlayer(mainHue);
+  }
   drawPlayer(mainHue) {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     const finalHue = mainHue + 35;
     body.style.background = `radial-gradient(circle at ${
       this.x * this.canvas.width
@@ -343,15 +407,6 @@ class Player {
     this.context.stroke();
     this.context.restore();
   }
-  animate(mouse, mainHue, particleCount) {
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.particleContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.createParticle(particleCount);
-    this.drawParticles(mainHue);
-    this.drawPlayer(mainHue);
-    this.update(mouse);
-    this.screenWrap();
-  }
   createParticle(particleCount) {
     for (let i = 0; i < particleCount; i++) {
       this.particleArr.push(
@@ -369,6 +424,7 @@ class Player {
     }
   }
   drawParticles(mainHue) {
+    this.particleContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (let i = 0; i < this.particleArr.length; i++) {
       const particle = this.particleArr[i];
       particle.draw(mainHue);
@@ -623,9 +679,8 @@ class Stars {
     for (let i = 0; i < this.starCount; i++) {
       this.starArr.push(new Star(this.canvas, this.context));
     }
-    this.drawStars();
   }
-  drawStars() {
+  draw() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (let i = 0; i < this.starArr.length; i++) {
       const star = this.starArr[i];
@@ -647,6 +702,8 @@ class Mouse {
     this.radius = radius;
     this.touchstartX;
     this.touchstartY;
+    this.touchendX;
+    this.touchendY;
     this.touchDiffX = 0;
     this.touchDiffY = 0;
     this.touchDeadzoneX = 15;
@@ -718,6 +775,11 @@ class Mouse {
   }
 }
 
+// Get random number from range
+function getRandomRange(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
 // Instantiate objects **************************************************************************************************************
 const userInterface = new UserInterface();
 const stars = new Stars();
@@ -729,17 +791,13 @@ const player = new Player(
 );
 const mouse = new Mouse(0, 0, 30);
 
-// Get random number from range
-function getRandomRange(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
 // MAIN FUNCTION **********************************************************************************************************************************
 function animate() {
-  stars.drawStars();
+  stars.draw();
   userInterface.update(player);
-  player.animate(
+  player.update(
     mouse,
+    userInterface,
     userInterface.mainHue,
     userInterface.particleCountInput.value
   );
