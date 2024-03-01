@@ -1,5 +1,173 @@
 class UserInterface {
   constructor() {
+    this.nameText;
+    this.options;
+    this.accLabel;
+    this.decelLabel;
+    this.turnSpeedLabel;
+    this.particleCountLabel;
+    this.accInput;
+    this.decelInput;
+    this.turnSpeedInput;
+    this.particleCountInput;
+    this.optionsContainer;
+    this.optionsIconWrapper;
+    this.optionsIconTop;
+    this.optionsIconBottom;
+    this.scoreTextTitle;
+    this.highScoreTextTitle;
+    this.scoreTextResults;
+    this.highScoreTextResults;
+    this.mainHue = Math.random() * 360;
+    this.mainHueIncrement = 0.05;
+    this.isOptionsOpen = false;
+    this.init();
+  }
+  init() {
+    this.initElements();
+    this.initEvents();
+  }
+  initElements() {
+    // Create Main Text element **************************************************************************************************************
+    this.addElement(
+      "div",
+      document.body,
+      `<h1 class="seneca-text">Seneca College of Applied Arts & Technology</h1>
+      <h2 class="name-text">Welcome to <span class="name-wrapper"><span class="name" id="name">Luca Novello</span>'s</span> Website</h2>`,
+      "text-container",
+      "text-container"
+    );
+    // Create Score element **************************************************************************************************************
+    this.addElement(
+      "div",
+      document.body,
+      `<p class="score-text-title" id="score-text-title">Score:</p>
+      <span class="score-text-results" id="score-text-results">0</span>`,
+      "score-text-wrapper",
+      "score-text-wrapper"
+    );
+    // Create Record element **************************************************************************************************************
+    this.addElement(
+      "div",
+      document.body,
+      `<p class="high-score-text-title" id="high-score-text-title">Record:</p>
+      <span class="high-score-text-results" id="high-score-text-results">0</span>`,
+      "high-score-text-wrapper",
+      "high-score-text-wrapper"
+    );
+    // Create Options Button element **************************************************************************************************************
+    this.addElement(
+      "button",
+      document.body,
+      `<span class="options-icon-top" id="options-icon-top" data-group="options"></span>
+      <span class="options-icon-bottom" id="options-icon-bottom" data-group="options"></span>`,
+      "options-icon-wrapper",
+      "options-icon-wrapper",
+      "options"
+    );
+    // Create Option Menu element **************************************************************************************************************
+    this.addElement(
+      "div",
+      document.body,
+      `<div class="option-settings-wrapper" data-group="options">
+      <div class="form-row" data-group="options">
+        <label for="acc" id="acc-label" data-group="options"
+          >Acceleration:
+        </label>
+        <input type="range" name="acc" id="acc-input" data-group="options" />
+      </div>
+      <div class="form-row" data-group="options">
+        <label for="decel" id="decel-label" data-group="options"
+          >Deceleration:
+        </label>
+        <input
+          type="range"
+          name="decel"
+          id="decel-input"
+          data-group="options"
+        />
+      </div>
+      <div class="form-row" data-group="options">
+        <label for="turnspeed" id="turnspeed-label" data-group="options"
+          >TurnSpeed:
+        </label>
+        <input
+          type="range"
+          name="turnspeed"
+          id="turnspeed-input"
+          data-group="options"
+        />
+      </div>
+      <div class="form-row" data-group="options">
+        <label
+          for="particle-count"
+          id="particle-count-label"
+          data-group="options"
+          >Particles:
+        </label>
+        <input
+          type="range"
+          name="particle-count"
+          id="particle-count-input"
+          min="1"
+          max="50"
+          step="1"
+          value="5"
+          data-group="options"
+        />
+      </div>
+    </div>
+    <div class="option-controls-wrapper" data-group="options">
+      <div class="form-row" data-group="options">
+        <p class="controls-title" data-group="options">Controls</p>
+        <ul class="controls-list" data-group="options">
+          <li class="controls-list-item" data-group="options">
+            <span class="controls-list-left-wrapper" data-group="options">
+              <p data-group="options">W</p>
+              or
+              <p data-group="options">&#8593;</p>
+            </span>
+            <span class="controls-list-right-wrapper" data-group="options"
+              ><p>Forward</p></span
+            >
+          </li>
+          <li class="controls-list-item" data-group="options">
+            <span class="controls-list-left-wrapper" data-group="options">
+              <p data-group="options">S</p>
+              or
+              <p data-group="options">&#8595;</p>
+            </span>
+            <span class="controls-list-right-wrapper" data-group="options"
+              ><p>Reverse</p></span
+            >
+          </li>
+          <li class="controls-list-item" data-group="options">
+            <span class="controls-list-left-wrapper" data-group="options">
+              <p data-group="options">A</p>
+              or
+              <p data-group="options">&#8592;</p>
+            </span>
+            <span class="controls-list-right-wrapper" data-group="options"
+              ><p>&#8634;</p></span
+            >
+          </li>
+          <li class="controls-list-item" data-group="options">
+            <span class="controls-list-left-wrapper" data-group="options">
+              <p data-group="options">D</p>
+              or
+              <p data-group="options">&#8594;</p>
+            </span>
+            <span class="controls-list-right-wrapper" data-group="options"
+              ><p>&#8635;</p></span
+            >
+          </li>
+        </ul>
+      </div>
+    </div>`,
+      "options-container",
+      "options-container",
+      "options"
+    );
     this.nameText = document.getElementById("name");
     this.options = document.getElementById("options");
     this.accLabel = document.getElementById("acc-label");
@@ -20,13 +188,6 @@ class UserInterface {
     this.highScoreTextResults = document.getElementById(
       "high-score-text-results"
     );
-    this.mainHue = Math.random() * 360;
-    this.mainHueIncrement = 0.05;
-    this.isOptionsOpen = false;
-    this.init();
-  }
-  init() {
-    this.initEvents();
   }
   initEvents() {
     // Window Event **************************************************************************************************************
@@ -125,16 +286,16 @@ class UserInterface {
       }
     });
     this.accInput.addEventListener("wheel", (e) => {
-      this.onWheelHandler(e, this.accInput, 0.1, 1);
+      this.onWheelHandler(e, this.accInput, 1);
     });
     this.decelInput.addEventListener("wheel", (e) => {
-      this.onWheelHandler(e, this.decelInput, 0.01, 2);
+      this.onWheelHandler(e, this.decelInput, 1);
     });
     this.turnSpeedInput.addEventListener("wheel", (e) => {
-      this.onWheelHandler(e, this.turnSpeedInput, 0.1, 2);
+      this.onWheelHandler(e, this.turnSpeedInput, 1);
     });
     this.particleCountInput.addEventListener("wheel", (e) => {
-      this.onWheelHandler(e, this.particleCountInput, 1, 0);
+      this.onWheelHandler(e, this.particleCountInput, 1);
     });
     this.optionsIconWrapper.addEventListener("touchstart", (e) => {
       e.preventDefault();
@@ -158,6 +319,21 @@ class UserInterface {
     this.scoreTextResults.innerText = player.score;
     this.highScoreTextResults.innerText = player.highScore;
   }
+  addElement(
+    type = "div",
+    parent = document.body,
+    innerHTML = null,
+    className = null,
+    id = className,
+    dataGroup = null
+  ) {
+    const newDiv = document.createElement(type);
+    className != null && (newDiv.className = className);
+    id != null && (newDiv.id = id);
+    dataGroup != null && (newDiv.dataGroup = dataGroup);
+    innerHTML != null && (newDiv.innerHTML = innerHTML);
+    parent.appendChild(newDiv);
+  }
   mobileNavCloseHandler() {
     if (!this.isOptionsOpen) {
       this.optionsIconTop.classList.remove("options-icon-top-close");
@@ -169,13 +345,12 @@ class UserInterface {
       this.optionsContainer.classList.add("options-container-closed");
     }
   }
-  onWheelHandler(e, element, increment, fixedTo) {
+  onWheelHandler(e, element, increment) {
     if (e.wheelDeltaY > 0)
-      element.value = (parseFloat(element.value) + increment).toFixed(fixedTo);
+      element.value = parseFloat(element.value) + increment;
     if (e.wheelDeltaY < 0)
-      element.value = (parseFloat(element.value) - increment).toFixed(fixedTo);
+      element.value = parseFloat(element.value) - increment;
   }
-  optionsOnChangeHandler() {}
 }
 class Player {
   constructor(x, y, mainHue, particleCount) {
@@ -196,7 +371,7 @@ class Player {
       min: 0.1,
       max: 10,
       step: 0.1,
-      value: 1,
+      value: 0.8,
       normMultiplier: 10,
     };
     this.decel = {

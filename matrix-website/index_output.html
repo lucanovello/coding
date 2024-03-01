@@ -27,7 +27,7 @@
       body {
         width: 100%;
         min-height: 100vh;
-        padding: 10vh 5%;
+        padding: 15vh 5%;
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -371,159 +371,177 @@
     </style>
   </head>
   <body id="body">
-    <div class="text-container">
-      <h1 class="seneca-text">Seneca College of Applied Arts & Technology</h1>
-      <h2 class="name-text">
-        Welcome to
-        <span class="name-wrapper"
-          ><span class="name" id="name">Luca Novello </span>'s</span
-        >
-        Website
-      </h2>
-    </div>
-    <div class="score-text-wrapper">
-      <p class="score-text-title" id="score-text-title">Score:</p>
-      <span class="score-text-results" id="score-text-results">0</span>
-    </div>
-    <div class="high-score-text-wrapper">
-      <p class="high-score-text-title" id="high-score-text-title">Record:</p>
-      <span class="high-score-text-results" id="high-score-text-results"
-        >0</span
-      >
-    </div>
-    <button
-      class="options-icon-wrapper"
-      id="options-icon-wrapper"
-      data-group="options"
-    >
-      <span
-        class="options-icon-top"
-        id="options-icon-top"
-        data-group="options"
-      ></span
-      ><span
-        class="options-icon-bottom"
-        id="options-icon-bottom"
-        data-group="options"
-      ></span>
-    </button>
-    <div class="options-container" id="options-container" data-group="options">
-      <div class="option-settings-wrapper" data-group="options">
-        <div class="form-row" data-group="options">
-          <label for="acc" id="acc-label" data-group="options"
-            >Acceleration:
-          </label>
-          <input
-            type="range"
-            name="acc"
-            id="acc-input"
-            min="0.1"
-            max="20"
-            step="0.1"
-            value="1.2"
-            data-group="options"
-          />
-        </div>
-        <div class="form-row" data-group="options">
-          <label for="decel" id="decel-label" data-group="options"
-            >Deceleration:
-          </label>
-          <input
-            type="range"
-            name="decel"
-            id="decel-input"
-            min="0.01"
-            max="1"
-            step="0.01"
-            value="0.1"
-            data-group="options"
-          />
-        </div>
-        <div class="form-row" data-group="options">
-          <label for="turnspeed" id="turnspeed-label" data-group="options"
-            >TurnSpeed:
-          </label>
-          <input
-            type="range"
-            name="turnspeed"
-            id="turnspeed-input"
-            min="0.1"
-            max="3"
-            step="0.1"
-            value="0.3"
-            data-group="options"
-          />
-        </div>
-        <div class="form-row" data-group="options">
-          <label
-            for="particle-count"
-            id="particle-count-label"
-            data-group="options"
-            >Particles:
-          </label>
-          <input
-            type="range"
-            name="particle-count"
-            id="particle-count-input"
-            min="1"
-            max="50"
-            step="1"
-            value="5"
-            data-group="options"
-          />
-        </div>
-      </div>
-      <div class="option-controls-wrapper" data-group="options">
-        <div class="form-row" data-group="options">
-          <p class="controls-title" data-group="options">Controls</p>
-          <ul class="controls-list" data-group="options">
-            <li class="controls-list-item" data-group="options">
-              <span class="controls-list-left-wrapper" data-group="options">
-                <p data-group="options">W</p>
-                or
-                <p data-group="options">&#8593;</p>
-              </span>
-              <span class="controls-list-right-wrapper" data-group="options"
-                ><p>Forward</p></span
-              >
-            </li>
-            <li class="controls-list-item" data-group="options">
-              <span class="controls-list-left-wrapper" data-group="options">
-                <p data-group="options">S</p>
-                or
-                <p data-group="options">&#8595;</p>
-              </span>
-              <span class="controls-list-right-wrapper" data-group="options"
-                ><p>Reverse</p></span
-              >
-            </li>
-            <li class="controls-list-item" data-group="options">
-              <span class="controls-list-left-wrapper" data-group="options">
-                <p data-group="options">A</p>
-                or
-                <p data-group="options">&#8592;</p>
-              </span>
-              <span class="controls-list-right-wrapper" data-group="options"
-                ><p>&#8634;</p></span
-              >
-            </li>
-            <li class="controls-list-item" data-group="options">
-              <span class="controls-list-left-wrapper" data-group="options">
-                <p data-group="options">D</p>
-                or
-                <p data-group="options">&#8594;</p>
-              </span>
-              <span class="controls-list-right-wrapper" data-group="options"
-                ><p>&#8635;</p></span
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
     <script>
       class UserInterface {
         constructor() {
+          this.nameText;
+          this.options;
+          this.accLabel;
+          this.decelLabel;
+          this.turnSpeedLabel;
+          this.particleCountLabel;
+          this.accInput;
+          this.decelInput;
+          this.turnSpeedInput;
+          this.particleCountInput;
+          this.optionsContainer;
+          this.optionsIconWrapper;
+          this.optionsIconTop;
+          this.optionsIconBottom;
+          this.scoreTextTitle;
+          this.highScoreTextTitle;
+          this.scoreTextResults;
+          this.highScoreTextResults;
+          this.mainHue = Math.random() * 360;
+          this.mainHueIncrement = 0.05;
+          this.isOptionsOpen = false;
+          this.init();
+        }
+        init() {
+          this.initElements();
+          this.initEvents();
+        }
+        initElements() {
+          // Create Main Text element **************************************************************************************************************
+          this.addElement(
+            "div",
+            document.body,
+            `<h1 class="seneca-text">Seneca College of Applied Arts & Technology</h1>
+      <h2 class="name-text">Welcome to <span class="name-wrapper"><span class="name" id="name">Luca Novello</span>'s</span> Website</h2>`,
+            "text-container",
+            "text-container"
+          );
+          // Create Score element **************************************************************************************************************
+          this.addElement(
+            "div",
+            document.body,
+            `<p class="score-text-title" id="score-text-title">Score:</p>
+      <span class="score-text-results" id="score-text-results">0</span>`,
+            "score-text-wrapper",
+            "score-text-wrapper"
+          );
+          // Create Record element **************************************************************************************************************
+          this.addElement(
+            "div",
+            document.body,
+            `<p class="high-score-text-title" id="high-score-text-title">Record:</p>
+      <span class="high-score-text-results" id="high-score-text-results">0</span>`,
+            "high-score-text-wrapper",
+            "high-score-text-wrapper"
+          );
+          // Create Options Button element **************************************************************************************************************
+          this.addElement(
+            "button",
+            document.body,
+            `<span class="options-icon-top" id="options-icon-top" data-group="options"></span>
+      <span class="options-icon-bottom" id="options-icon-bottom" data-group="options"></span>`,
+            "options-icon-wrapper",
+            "options-icon-wrapper",
+            "options"
+          );
+          // Create Option Menu element **************************************************************************************************************
+          this.addElement(
+            "div",
+            document.body,
+            `<div class="option-settings-wrapper" data-group="options">
+      <div class="form-row" data-group="options">
+        <label for="acc" id="acc-label" data-group="options"
+          >Acceleration:
+        </label>
+        <input type="range" name="acc" id="acc-input" data-group="options" />
+      </div>
+      <div class="form-row" data-group="options">
+        <label for="decel" id="decel-label" data-group="options"
+          >Deceleration:
+        </label>
+        <input
+          type="range"
+          name="decel"
+          id="decel-input"
+          data-group="options"
+        />
+      </div>
+      <div class="form-row" data-group="options">
+        <label for="turnspeed" id="turnspeed-label" data-group="options"
+          >TurnSpeed:
+        </label>
+        <input
+          type="range"
+          name="turnspeed"
+          id="turnspeed-input"
+          data-group="options"
+        />
+      </div>
+      <div class="form-row" data-group="options">
+        <label
+          for="particle-count"
+          id="particle-count-label"
+          data-group="options"
+          >Particles:
+        </label>
+        <input
+          type="range"
+          name="particle-count"
+          id="particle-count-input"
+          min="1"
+          max="50"
+          step="1"
+          value="5"
+          data-group="options"
+        />
+      </div>
+    </div>
+    <div class="option-controls-wrapper" data-group="options">
+      <div class="form-row" data-group="options">
+        <p class="controls-title" data-group="options">Controls</p>
+        <ul class="controls-list" data-group="options">
+          <li class="controls-list-item" data-group="options">
+            <span class="controls-list-left-wrapper" data-group="options">
+              <p data-group="options">W</p>
+              or
+              <p data-group="options">&#8593;</p>
+            </span>
+            <span class="controls-list-right-wrapper" data-group="options"
+              ><p>Forward</p></span
+            >
+          </li>
+          <li class="controls-list-item" data-group="options">
+            <span class="controls-list-left-wrapper" data-group="options">
+              <p data-group="options">S</p>
+              or
+              <p data-group="options">&#8595;</p>
+            </span>
+            <span class="controls-list-right-wrapper" data-group="options"
+              ><p>Reverse</p></span
+            >
+          </li>
+          <li class="controls-list-item" data-group="options">
+            <span class="controls-list-left-wrapper" data-group="options">
+              <p data-group="options">A</p>
+              or
+              <p data-group="options">&#8592;</p>
+            </span>
+            <span class="controls-list-right-wrapper" data-group="options"
+              ><p>&#8634;</p></span
+            >
+          </li>
+          <li class="controls-list-item" data-group="options">
+            <span class="controls-list-left-wrapper" data-group="options">
+              <p data-group="options">D</p>
+              or
+              <p data-group="options">&#8594;</p>
+            </span>
+            <span class="controls-list-right-wrapper" data-group="options"
+              ><p>&#8635;</p></span
+            >
+          </li>
+        </ul>
+      </div>
+    </div>`,
+            "options-container",
+            "options-container",
+            "options"
+          );
           this.nameText = document.getElementById("name");
           this.options = document.getElementById("options");
           this.accLabel = document.getElementById("acc-label");
@@ -554,13 +572,6 @@
           this.highScoreTextResults = document.getElementById(
             "high-score-text-results"
           );
-          this.mainHue = Math.random() * 360;
-          this.mainHueIncrement = 0.05;
-          this.isOptionsOpen = false;
-          this.init();
-        }
-        init() {
-          this.initEvents();
         }
         initEvents() {
           // Window Event **************************************************************************************************************
@@ -576,10 +587,10 @@
           window.addEventListener("touchmove", (e) => {
             mouse.isMobileControl = true;
             if (e.target.dataset.group != "options") {
-              mouse.touchDiffX =
-                e.changedTouches[0].clientX - mouse.touchstartX;
-              mouse.touchDiffY =
-                e.changedTouches[0].clientY - mouse.touchstartY;
+              mouse.touchendX = e.changedTouches[0].clientX;
+              mouse.touchendY = e.changedTouches[0].clientY;
+              mouse.touchDiffX = mouse.touchendX - mouse.touchstartX;
+              mouse.touchDiffY = mouse.touchendY - mouse.touchstartY;
               mouse.update(
                 e.changedTouches[0].clientX,
                 e.changedTouches[0].clientY
@@ -610,6 +621,8 @@
             );
 
             mouse.isMobileControl = false;
+            mouse.touchendX = e.changedTouches[0].clientX;
+            mouse.touchendY = e.changedTouches[0].clientY;
             mouse.touchstartX = undefined;
             mouse.touchstartY = undefined;
             if (e.target.dataset.group != "options") {
@@ -671,16 +684,16 @@
             }
           });
           this.accInput.addEventListener("wheel", (e) => {
-            this.onWheelHandler(e, this.accInput, 0.1, 1);
+            this.onWheelHandler(e, this.accInput, 1);
           });
           this.decelInput.addEventListener("wheel", (e) => {
-            this.onWheelHandler(e, this.decelInput, 0.01, 2);
+            this.onWheelHandler(e, this.decelInput, 1);
           });
           this.turnSpeedInput.addEventListener("wheel", (e) => {
-            this.onWheelHandler(e, this.turnSpeedInput, 0.1, 2);
+            this.onWheelHandler(e, this.turnSpeedInput, 1);
           });
           this.particleCountInput.addEventListener("wheel", (e) => {
-            this.onWheelHandler(e, this.particleCountInput, 1, 0);
+            this.onWheelHandler(e, this.particleCountInput, 1);
           });
           this.optionsIconWrapper.addEventListener("touchstart", (e) => {
             e.preventDefault();
@@ -701,9 +714,23 @@
           this.mainHue += this.mainHueIncrement;
 
           // Update Score **************************************************************************************************************
-          player.score && (this.scoreTextResults.innerText = player.score);
-          player.highScore &&
-            (this.highScoreTextResults.innerText = player.highScore);
+          this.scoreTextResults.innerText = player.score;
+          this.highScoreTextResults.innerText = player.highScore;
+        }
+        addElement(
+          type = "div",
+          parent = document.body,
+          innerHTML = null,
+          className = null,
+          id = className,
+          dataGroup = null
+        ) {
+          const newDiv = document.createElement(type);
+          className != null && (newDiv.className = className);
+          id != null && (newDiv.id = id);
+          dataGroup != null && (newDiv.dataGroup = dataGroup);
+          innerHTML != null && (newDiv.innerHTML = innerHTML);
+          parent.appendChild(newDiv);
         }
         mobileNavCloseHandler() {
           if (!this.isOptionsOpen) {
@@ -718,15 +745,11 @@
             this.optionsContainer.classList.add("options-container-closed");
           }
         }
-        onWheelHandler(e, element, increment, fixedTo) {
+        onWheelHandler(e, element, increment) {
           if (e.wheelDeltaY > 0)
-            element.value = (parseFloat(element.value) + increment).toFixed(
-              fixedTo
-            );
+            element.value = parseFloat(element.value) + increment;
           if (e.wheelDeltaY < 0)
-            element.value = (parseFloat(element.value) - increment).toFixed(
-              fixedTo
-            );
+            element.value = parseFloat(element.value) - increment;
         }
       }
       class Player {
@@ -744,6 +767,27 @@
           this.radius = 9;
           this.velX = 0;
           this.velY = 0;
+          this.acc = {
+            min: 0.1,
+            max: 10,
+            step: 0.1,
+            value: 0.8,
+            normMultiplier: 10,
+          };
+          this.decel = {
+            min: 0.01,
+            max: 1,
+            step: 0.01,
+            value: 0.1,
+            normMultiplier: 100,
+          };
+          this.turnSpeed = {
+            min: 0.005,
+            max: 0.5,
+            step: 0.005,
+            value: 0.1,
+            normMultiplier: 200,
+          };
           this.angle = 0;
           this.up = 0;
           this.down = 0;
@@ -757,11 +801,8 @@
           this.maxScreenWidth = 2880;
           this.health = 10;
           this.damage = 1;
-          this.accDefaultValue = 0.7;
-          this.decelDefaultValue = 0.1;
-          this.turnSpeedDefaultValue = 0.8;
           this.particleCountDefaultValue = 20;
-          this.decel = 0.1;
+
           // Coins **************************************************************************************************************
           this.coinArr = [];
           this.score = 0;
@@ -803,48 +844,91 @@
           this.coinCanvas = coinCanvas;
           this.coinContext = coinCtx;
           // Initialize Screen Options **************************************************************************************************************
-          userInterface.accInput.value = this.accDefaultValue;
-          userInterface.decelInput.value = this.decelDefaultValue;
-          userInterface.turnSpeedInput.value = this.turnSpeedDefaultValue;
+          userInterface.accInput.min = this.acc.min * this.acc.normMultiplier;
+          userInterface.accInput.max = this.acc.max * this.acc.normMultiplier;
+          userInterface.accInput.step = this.acc.step * this.acc.normMultiplier;
+          userInterface.accInput.value =
+            this.acc.value * this.acc.normMultiplier;
+          userInterface.decelInput.min =
+            this.decel.min * this.decel.normMultiplier;
+          userInterface.decelInput.max =
+            this.decel.max * this.decel.normMultiplier;
+          userInterface.decelInput.step =
+            this.decel.step * this.decel.normMultiplier;
+          userInterface.decelInput.value =
+            this.decel.value * this.decel.normMultiplier;
+          userInterface.turnSpeedInput.min =
+            this.turnSpeed.min * this.turnSpeed.normMultiplier;
+          userInterface.turnSpeedInput.max =
+            this.turnSpeed.max * this.turnSpeed.normMultiplier;
+          userInterface.turnSpeedInput.step =
+            this.turnSpeed.step * this.turnSpeed.normMultiplier;
+          userInterface.turnSpeedInput.value =
+            this.turnSpeed.value * this.turnSpeed.normMultiplier;
+
           userInterface.particleCountInput.value =
             this.particleCountDefaultValue;
+
           // Get highscore from local storage **************************************************************************************************************
           if (localStorage.getItem("highScore") > this.highScore) {
             this.highScore = localStorage.getItem("highScore");
           } else {
             localStorage.setItem("highScore", `${this.highScore}`);
           }
+
           this.createCoins();
         }
-        update(mouse) {
-          const newAcc = userInterface.accInput.value;
-          const newDecel = userInterface.decelInput.value;
-          const newturnSpeed = userInterface.turnSpeedInput.value * 0.1;
+        update(mouse, userInterface, mainHue, particleCount) {
+          this.createParticle(particleCount);
+          this.updateMovement(mouse, userInterface);
+          this.screenWrap();
+          this.draw(mainHue);
+        }
+        updateMovement(mouse, userInterface) {
+          if (userInterface) {
+            this.acc.value =
+              userInterface.accInput.value / this.acc.normMultiplier;
+            this.decel.value =
+              userInterface.decelInput.value / this.decel.normMultiplier;
+            this.turnSpeed.value =
+              userInterface.turnSpeedInput.value /
+              this.turnSpeed.normMultiplier;
+          }
           if (mouse.isMobileControl === true) {
-            mouse.touchDiffX < -mouse.touchDeadzoneX ||
-            mouse.touchDiffX > mouse.touchDeadzoneX
-              ? (this.directionX = (mouse.touchDiffX / this.canvas.width) * 5)
-              : (this.directionX = 0);
-            mouse.touchDiffY < -mouse.touchDeadzoneY ||
-            mouse.touchDiffY > mouse.touchDeadzoneY
-              ? (this.directionY =
-                  -mouse.touchDiffY / (this.canvas.height * 0.1))
-              : (this.directionY = 0);
+            if (
+              mouse.touchDiffX < -mouse.touchDeadzoneX ||
+              mouse.touchDiffX > mouse.touchDeadzoneX ||
+              mouse.touchDiffY < -mouse.touchDeadzoneY ||
+              mouse.touchDiffY > mouse.touchDeadzoneY
+            ) {
+              this.angle = Math.atan2(
+                mouse.touchendY - mouse.touchstartY,
+                mouse.touchendX - mouse.touchstartX
+              );
+              this.directionY = -mouse.touchDiffY / (this.canvas.height * 0.1);
+            }
             this.directionX > 1 && (this.directionX = 1);
             this.directionX < -1 && (this.directionX = -1);
             this.directionY > 1 && (this.directionY = 1);
             this.directionY < -1 && (this.directionY = -1);
+            this.velX +=
+              Math.cos(this.angle) * this.acc.value -
+              this.velX * this.decel.value;
+            this.velY +=
+              Math.sin(this.angle) * this.acc.value -
+              this.velY * this.decel.value;
           } else {
             this.directionX = this.right - this.left;
             this.directionY = this.up - this.down;
+            this.angle += this.directionX * this.turnSpeed.value;
+            this.velX +=
+              Math.cos(this.angle) * this.directionY * this.acc.value -
+              this.velX * this.decel.value;
+            this.velY +=
+              Math.sin(this.angle) * this.directionY * this.acc.value -
+              this.velY * this.decel.value;
           }
-          this.angle += this.directionX * newturnSpeed;
-          this.velX +=
-            Math.cos(this.angle) * this.directionY * newAcc -
-            this.velX * newDecel;
-          this.velY +=
-            Math.sin(this.angle) * this.directionY * newAcc -
-            this.velY * newDecel;
+
           this.x += this.velX / this.canvas.width;
           this.y += this.velY / this.canvas.height;
           // Update Score **************************************************************************************************************
@@ -863,7 +947,7 @@
               this.coinArr[0].y * this.coinCanvas.width + this.coinArr[0].radius
           ) {
             this.score += 1;
-            if (this.score >= this.highScore) {
+            if (this.score > this.highScore) {
               this.highScore = this.score;
               localStorage.setItem("highScore", `${this.highScore}`);
             }
@@ -873,7 +957,12 @@
             }, this.coinSpawnTime);
           }
         }
+        draw(mainHue) {
+          this.drawParticles(mainHue);
+          this.drawPlayer(mainHue);
+        }
         drawPlayer(mainHue) {
+          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
           const finalHue = mainHue + 35;
           body.style.background = `radial-gradient(circle at ${
             this.x * this.canvas.width
@@ -905,20 +994,6 @@
           this.context.stroke();
           this.context.restore();
         }
-        animate(mouse, mainHue, particleCount) {
-          this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          this.particleContext.clearRect(
-            0,
-            0,
-            this.canvas.width,
-            this.canvas.height
-          );
-          this.createParticle(particleCount);
-          this.drawParticles(mainHue);
-          this.drawPlayer(mainHue);
-          this.update(mouse);
-          this.screenWrap();
-        }
         createParticle(particleCount) {
           for (let i = 0; i < particleCount; i++) {
             this.particleArr.push(
@@ -936,6 +1011,12 @@
           }
         }
         drawParticles(mainHue) {
+          this.particleContext.clearRect(
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+          );
           for (let i = 0; i < this.particleArr.length; i++) {
             const particle = this.particleArr[i];
             particle.draw(mainHue);
@@ -943,6 +1024,7 @@
           }
         }
         createCoins() {
+          // if (this.coinArr.length == 0) {
           this.coinArr.push(
             new Coin(
               this.coinCanvas,
@@ -952,6 +1034,7 @@
               this.radius * 5
             )
           );
+          // }
         }
         drawCoins() {
           this.coinContext.clearRect(
@@ -1086,6 +1169,32 @@
             this.brightness + 20
           }%, ${this.alpha})`;
           this.context.beginPath();
+          // CIRCLE SHAPE **************************************************************************************************************
+          // this.context.moveTo(x - this.radiusX + this.radiusX * osc, y);
+          // this.context.quadraticCurveTo(
+          //   x - this.radiusX + this.radiusX * osc,
+          //   y - this.radius,
+          //   x,
+          //   y - this.radius
+          // );
+          // this.context.quadraticCurveTo(
+          //   x + this.radiusX + this.radiusX * -osc,
+          //   y - this.radius,
+          //   x + this.radiusX + this.radiusX * -osc,
+          //   y
+          // );
+          // this.context.quadraticCurveTo(
+          //   x + this.radiusX + this.radiusX * -osc,
+          //   y + this.radius,
+          //   x,
+          //   y + this.radius
+          // );
+          // this.context.quadraticCurveTo(
+          //   x - this.radiusX + this.radiusX * osc,
+          //   y + this.radius,
+          //   x - this.radiusX + this.radiusX * osc,
+          //   y
+          // );
           // DIAMOND SHAPE **************************************************************************************************************
           this.context.moveTo(x - this.radiusX + this.radiusX * osc, y);
           this.context.lineTo(x, y - this.radius * 0.5);
@@ -1167,9 +1276,8 @@
           for (let i = 0; i < this.starCount; i++) {
             this.starArr.push(new Star(this.canvas, this.context));
           }
-          this.drawStars();
         }
-        drawStars() {
+        draw() {
           this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
           for (let i = 0; i < this.starArr.length; i++) {
             const star = this.starArr[i];
@@ -1191,6 +1299,8 @@
           this.radius = radius;
           this.touchstartX;
           this.touchstartY;
+          this.touchendX;
+          this.touchendY;
           this.touchDiffX = 0;
           this.touchDiffY = 0;
           this.touchDeadzoneX = 15;
@@ -1247,6 +1357,7 @@
               this.context.stroke();
               this.context.fill();
               this.context.closePath();
+
               this.context.beginPath();
               this.context.moveTo(this.touchstartX, this.touchstartY);
               this.context.lineTo(this.x, this.y);
@@ -1260,6 +1371,12 @@
           this.canvas.height = height;
         }
       }
+
+      // Get random number from range
+      function getRandomRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
       // Instantiate objects **************************************************************************************************************
       const userInterface = new UserInterface();
       const stars = new Stars();
@@ -1270,21 +1387,21 @@
         userInterface.particleCountInput.value
       );
       const mouse = new Mouse(0, 0, 30);
-      // Get random number from range
-      function getRandomRange(min, max) {
-        return Math.random() * (max - min) + min;
-      }
+
       // MAIN FUNCTION **********************************************************************************************************************************
       function animate() {
-        stars.drawStars();
+        stars.draw();
         userInterface.update(player);
-        player.animate(
+        player.update(
           mouse,
+          userInterface,
           userInterface.mainHue,
           userInterface.particleCountInput.value
         );
         mouse.draw();
+
         player.drawCoins();
+
         userInterface.accLabel.innerHTML = `Acceleration: <span>${userInterface.accInput.value}</span>`;
         userInterface.decelLabel.innerHTML = `Deceleration: <span>${userInterface.decelInput.value}</span>`;
         userInterface.turnSpeedLabel.innerHTML = `TurnSpeed: <span>${userInterface.turnSpeedInput.value}</span>`;
