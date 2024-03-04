@@ -28,9 +28,24 @@ class UserInterface {
     this.init();
   }
   init() {
+    this.initHeader();
     this.initElements();
     this.initScreenOptions();
     this.initEvents();
+  }
+  initHeader() {
+    document.title =
+      "Luca Novello | Seneca College of Applied Arts & Technology";
+    let head = document.querySelector("head");
+    let style = document.createElement("link");
+    style.setAttribute("rel", "stylesheet");
+    style.setAttribute("href", "./style.css");
+    head.appendChild(style);
+    let favicon = document.createElement("link");
+    favicon.setAttribute("rel", "shortcut icon");
+    favicon.setAttribute("href", "favicon.png");
+    favicon.setAttribute("type", "image/x-icon");
+    head.appendChild(favicon);
   }
   initElements() {
     // Create Main Text element **************************************************************************************************************
