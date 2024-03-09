@@ -4,9 +4,9 @@ class User {
     this.context;
     this.x = window.innerWidth * 0.5;
     this.y = window.innerHeight * 0.5;
-    this.radius = 5;
+    this.radius = 10;
     // movement
-    this.acc = 100;
+    this.acc = 1;
     this.decel = 0.1;
     this.direction = {
       x: 0,
@@ -40,17 +40,25 @@ class User {
     this.context = context;
   }
   update(x = null, y = null) {
-    if (x == null) {
+    if (x != null || y != null) {
       this.x = x;
       this.y = y;
     } else {
       this.direction.x = this.right - this.left;
       this.direction.y = this.down - this.up;
-      this.vel.x += this.direction.x * this.acc;
-      this.vel.y += this.direction.y * this.acc;
+      this.vel.x += this.direction.x * this.acc - this.vel.x * this.decel;
+      this.vel.y += this.direction.y * this.acc - this.vel.y * this.decel;
       this.x += this.vel.x;
       this.y += this.vel.y;
     }
+  }
+  draw() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.fillStyle = "black";
+    this.context.beginPath();
+    this.context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    this.context.fill();
+    this.context.closePath();
   }
   resize(width, height) {
     this.canvas.width = width;
@@ -85,7 +93,7 @@ class User {
   onKeydownHandler(key) {
     switch (key) {
       case "Space":
-        this.space = 1;
+        this.isLeftDown = 1;
         break;
       case "Shift":
         this.shift = 1;
@@ -112,7 +120,7 @@ class User {
   onKeyupHandler(key) {
     switch (key) {
       case "Space":
-        this.space = 0;
+        this.isLeftDown = 0;
         break;
       case "Shift":
         this.shift = 0;
@@ -366,7 +374,7 @@ class ParticleSpawner {
   constructor() {
     this.canvas;
     this.context;
-    this.particleCount = window.innerWidth > 1000 ? 20 : 50;
+    this.particleCount = window.innerWidth > 1000 ? 200 : 50;
     this.particleArr = [];
     this.initCanvas();
     this.createParticle(this.particleCount);
@@ -425,6 +433,7 @@ window.addEventListener("contextmenu", (e) => {
 // Mouse Events **************************************************************************************************************
 window.addEventListener("mousedown", (e) => {
   e.preventDefault();
+  user.update(e.clientX, e.clientY);
   user.onMousedownHandler(e);
 });
 window.addEventListener("mouseup", (e) => {
@@ -433,7 +442,9 @@ window.addEventListener("mouseup", (e) => {
 });
 window.addEventListener("mousemove", (e) => {
   e.preventDefault();
-  user.update(e.clientX, e.clientY);
+  if (user.isLeftDown || user.isRightDown) {
+    user.update(e.clientX, e.clientY);
+  }
 });
 window.addEventListener("touchstart", (e) => {
   console.log(e);
@@ -457,13 +468,15 @@ window.addEventListener("keydown", (e) => user.onKeydownHandler(e.code));
 window.addEventListener("keyup", (e) => user.onKeyupHandler(e.code));
 
 // Instantiate objects **************************************************************************************************************
-const user = new User(0, 0, 30);
 const particleSpawner = new ParticleSpawner();
+const user = new User(0, 0, 30);
 
 // MAIN FUNCTION **********************************************************************************************************************************
 function animate() {
   particleSpawner.update(user);
   particleSpawner.draw();
+  user.update();
+  user.draw();
   requestAnimationFrame(animate);
   console.log(user.up, user.down, user.left, user.right);
 }
