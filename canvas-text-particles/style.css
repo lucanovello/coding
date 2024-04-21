@@ -1,0 +1,50 @@
+/* FONTS ************************************************************************************************************ */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+/* font-family: 'Poppins', sans-serif; */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap");
+/* font-family: 'Roboto', sans-serif; */
+
+/* STYLES ************************************************************************************************************ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-touch-callout: none; /* Safari */
+  -webkit-user-select: none; /* Chrome */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
+body {
+  width: 100%;
+  min-height: 100vh;
+  padding: 15vh 5%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  /* background: linear-gradient(
+    to bottom left,
+    hsl(220, 20%, 8%),
+    hsl(210, 50%, 2%)
+  ); */
+  background: radial-gradient(
+    100vw 100vh at 50% 50%,
+    hsl(210, 20%, 7%),
+    hsl(200, 30%, 2%)
+  );
+  user-select: none;
+  overflow: hidden;
+}
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  user-select: none;
+  -webkit-touch-callout: none; /* Safari */
+  -webkit-user-select: none; /* Chrome */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+}
