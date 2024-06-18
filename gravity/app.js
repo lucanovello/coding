@@ -3,9 +3,9 @@ const ctx = canvas.getContext('2d');
 ctx.canvas.width = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
 
-const MAX_MASS = 100;
-const SPEED = 0.0001;
-const GRAVITY = 0.1;
+const MAX_MASS = 10000;
+const SPEED = 0.0005;
+const GRAVITY = 0.2;
 const BODY_COUNT = 5;
 const WALL_BOUNCE = 0.7;
 const DISTANCE_SCALE = 0.1;
