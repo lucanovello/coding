@@ -233,8 +233,8 @@ class Particle {
     if (user.isRightDown != 0 && dist < this.minDistance * 0.5) {
       this.vel.x += this.acc.x - this.vel.x * this.decel;
       this.vel.y += this.acc.y - this.vel.y * this.decel;
-      this.acc.x = -(Math.cos(this.angle) * this.speed * rightForce);
-      this.acc.y = -(Math.sin(this.angle) * this.speed * rightForce);
+      this.acc.x = -(Math.cos(this.angle) * this.speed * rightForce) ;
+      this.acc.y = -(Math.sin(this.angle) * this.speed * rightForce) ;
     }
 
     this.x += this.vel.x;
@@ -464,8 +464,8 @@ window.addEventListener("touchmove", (e) => {
   user.update(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
 });
 // Key Events **************************************************************************************************************
-window.addEventListener("keydown", (e) => user.onKeydownHandler(e.code));
-window.addEventListener("keyup", (e) => user.onKeyupHandler(e.code));
+// window.addEventListener("keydown", (e) => user.onKeydownHandler(e.code));
+// window.addEventListener("keyup", (e) => user.onKeyupHandler(e.code));
 
 // Instantiate objects **************************************************************************************************************
 const particleSpawner = new ParticleSpawner();
@@ -476,7 +476,7 @@ function animate() {
   particleSpawner.update(user);
   particleSpawner.draw();
   user.update();
-  user.draw();
+  // user.draw();
   requestAnimationFrame(animate);
   console.log(user.up, user.down, user.left, user.right);
 }
