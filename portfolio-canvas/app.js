@@ -7,24 +7,28 @@ canvas.height = window.innerHeight;
 class Attractor {
   constructor() {
     this.x = window.innerWidth / 2;
-    this.y = window.innerHeight / 4;
-    this.size = 8;
+    this.y = window.innerHeight / 2;
+    this.size = 10;
     this.radius =
       window.innerWidth > window.innerHeight
         ? window.innerWidth / this.size
         : window.innerHeight / this.size;
-    this.innerRadius = this.radius / 4;
-    this.speed = 1;
+    this.innerRadius = this.radius / 10;
+    this.speed = 2;
     this.direction = { x: 1, y: -1 };
     this.staticVelocity = { x: 0, y: 0 };
     this.velocity = {
       x: 0,
       y: 0,
     };
-    this.attraction = 0.00005;
+    this.attraction = this.speed * 0.0002;
+    this.scrollSpeed = 2;
+    this.scrollX = window.scrollX;
     this.scrollY = window.scrollY;
+    this.prevScrollX = this.scrollX;
     this.prevScrollY = this.scrollY;
-    this.maxVelocity = 800;
+    this.maxScrollVel = 1;
+    this.maxVelocity = 600;
     this.timer;
   }
   screenWrapCollision() {
@@ -59,7 +63,7 @@ class Attractor {
       this.direction.y *= -1;
     }
   }
-  update() {
+  updateSweep() {
     this.staticVelocity.x = this.speed * this.direction.x;
     this.staticVelocity.y = this.speed * this.direction.y;
     this.x += this.staticVelocity.x;
@@ -80,15 +84,41 @@ class Attractor {
     this.x = e.touches[0].clientX;
     this.y = e.touches[0].clientY;
   }
-  updateScroll(e) {
+  updateScroll() {
     clearTimeout(this.timer);
+
+    this.scrollX = window.scrollX;
     this.scrollY = window.scrollY;
-    this.updateVelocity(0, -(this.scrollY - this.prevScrollY) * 5);
+    this.updateVelocity(
+      -(this.scrollX - this.prevScrollX) * this.scrollSpeed,
+      -(this.scrollY - this.prevScrollY) * this.scrollSpeed
+    );
+    this.prevScrollX = this.scrollX;
     this.prevScrollY = this.scrollY;
+    this.clampVelocity(this.velocity.x, this.maxScrollVel);
+    this.clampVelocity(this.velocity.y, this.maxScrollVel);
 
     this.timer = setTimeout(() => {
       this.velocity = { x: 0, y: 0 };
-    }, 50);
+    }, 100);
+  }
+  updateWheel(e) {
+    e.preventDefault();
+    clearTimeout(this.timer);
+
+    this.updateVelocity(
+      e.deltaX * this.scrollSpeed,
+      e.deltaY * this.scrollSpeed
+    );
+    this.clampVelocity(this.velocity.y, this.maxScrollVel * 0.5);
+    this.timer = setTimeout(() => {
+      this.velocity = { x: 0, y: 0 };
+    }, 100);
+    console.log(e);
+  }
+  clampVelocity(velocity, max) {
+    velocity > max && (velocity = max);
+    velocity < -max && (velocity = -max);
   }
   updateVelocity(speedX, speedY) {
     this.velocity = {
@@ -97,9 +127,13 @@ class Attractor {
     };
   }
   draw() {
+    ctx.strokeStyle = "hsla(45, 100%, 50%, 0.5)";
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.strokeStyle = "gold";
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.closePath();
+    ctx.beginPath();
     ctx.arc(this.x, this.y, this.innerRadius, 0, Math.PI * 2);
     ctx.stroke();
     ctx.closePath();
@@ -113,6 +147,8 @@ class Grid {
     this.maxLength = Math.hypot(this.width, this.height);
     this.totalParticles = this.maxLength;
     this.particles = [];
+    this.minSizeRange = [0.5, 1];
+    this.maxSizeRange = [2, 3];
     this.createCells();
   }
   createCells() {
@@ -120,8 +156,8 @@ class Grid {
     for (let i = 0; i < this.totalParticles; i++) {
       const radius =
         Math.random() < 0.99
-          ? randomNumberFromRange(0.5, 1)
-          : randomNumberFromRange(2, 3);
+          ? randomNumberFromRange(this.minSizeRange[0], this.minSizeRange[1])
+          : randomNumberFromRange(this.maxSizeRange[0], this.maxSizeRange[1]);
       this.particles.push(
         new Particle(
           Math.random() * this.width,
@@ -161,9 +197,9 @@ class Particle {
       y: randomNumberFromRange(-this.speed, this.speed) * 10,
     };
     this.deceleration = 0.01;
-    this.innerDeceleration = 0.03;
+    this.innerDeceleration = 0.05;
     // style ------------------------
-    this.hue = randomNumberFromRange(0, 359);
+    this.hue = randomNumberFromRange(35, 60);
     this.saturation = randomNumberFromRange(80, 100);
     this.brightness = randomNumberFromRange(40, 85);
     this.counter = Math.random() * 1000;
@@ -214,8 +250,8 @@ class Particle {
     this.y += this.velocity.y;
 
     // collision handling ----------------------
-    this.bounceCollision();
-    // this.screenWrapCollision();
+    // this.bounceCollision();
+    this.screenWrapCollision();
 
     // update the counter ----------------------
     this.counter += 0.005;
@@ -256,6 +292,12 @@ class Particle {
   draw() {
     ctx.beginPath();
     ctx.fillStyle = `hsl(${this.hue}, ${this.saturation}%, ${this.brightness}%)`;
+    // ctx.rect(
+    //   this.x - this.radius / 2,
+    //   this.y - this.radius / 2,
+    //   this.radius,
+    //   this.radius
+    // );
     ctx.arc(
       this.x,
       this.y,
@@ -293,16 +335,23 @@ window.addEventListener("touchmove", (e) => {
   attractor.updateTouchmove(e);
 });
 
-window.addEventListener("scroll", (e) => {
-  attractor.updateScroll(e);
+window.addEventListener("scroll", () => {
+  attractor.updateScroll();
 });
+window.addEventListener(
+  "wheel",
+  (e) => {
+    attractor.updateWheel(e);
+  },
+  { passive: false }
+);
 
 function main() {
-  // grid.update(attractor);
-  grid.update(attractor2);
+  grid.update(attractor);
+  // grid.update(attractor2);
+  // attractor2.updateSweep();
   grid.draw();
-  attractor2.update();
-  // attractor2.draw();
+  // attractor.draw();
   requestAnimationFrame(main);
 }
 
