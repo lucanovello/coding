@@ -239,7 +239,7 @@ class Particle {
 
     this.x += this.vel.x;
     this.y += this.vel.y;
-    this.screenBounce();
+    this.screenWrap();
   }
   draw() {
     this.context.beginPath();
