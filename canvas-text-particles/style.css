@@ -17,6 +17,7 @@
   -webkit-user-select: none; /* Chrome */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
+  cursor: none;
 }
 body {
   width: 100%;

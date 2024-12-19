@@ -8,12 +8,12 @@ class Attractor {
   constructor() {
     this.x = window.innerWidth / 2;
     this.y = window.innerHeight / 2;
-    this.size = 10;
+    this.size = 8;
     this.radius =
       window.innerWidth > window.innerHeight
         ? window.innerWidth / this.size
         : window.innerHeight / this.size;
-    this.innerRadius = this.radius / 10;
+    this.innerRadius = this.radius / (this.size * 2);
     this.speed = 2;
     this.direction = { x: 1, y: -1 };
     this.staticVelocity = { x: 0, y: 0 };
@@ -21,7 +21,7 @@ class Attractor {
       x: 0,
       y: 0,
     };
-    this.attraction = this.speed * 0.0002;
+    this.attraction = this.speed * 0.0005;
     this.scrollSpeed = 2;
     this.scrollX = window.scrollX;
     this.scrollY = window.scrollY;
@@ -114,7 +114,6 @@ class Attractor {
     this.timer = setTimeout(() => {
       this.velocity = { x: 0, y: 0 };
     }, 100);
-    console.log(e);
   }
   clampVelocity(velocity, max) {
     velocity > max && (velocity = max);
@@ -191,17 +190,17 @@ class Particle {
     this.y = y;
     this.radius = radius;
     // physics ----------------------
-    this.speed = 0.1;
+    this.speed = 0.2;
     this.velocity = {
       x: randomNumberFromRange(-this.speed, this.speed) * 10,
       y: randomNumberFromRange(-this.speed, this.speed) * 10,
     };
     this.deceleration = 0.01;
-    this.innerDeceleration = 0.05;
+    this.innerDeceleration = 0.9;
     // style ------------------------
-    this.hue = randomNumberFromRange(35, 60);
-    this.saturation = randomNumberFromRange(80, 100);
-    this.brightness = randomNumberFromRange(40, 85);
+    this.hue = randomNumberFromRange(160, 270);
+    this.saturation = randomNumberFromRange(100, 100);
+    this.brightness = randomNumberFromRange(50, 70);
     this.counter = Math.random() * 1000;
   }
   update(attractor) {
@@ -250,8 +249,8 @@ class Particle {
     this.y += this.velocity.y;
 
     // collision handling ----------------------
-    // this.bounceCollision();
-    this.screenWrapCollision();
+    this.bounceCollision();
+    // this.screenWrapCollision();
 
     // update the counter ----------------------
     this.counter += 0.005;
@@ -338,6 +337,7 @@ window.addEventListener("touchmove", (e) => {
 window.addEventListener("scroll", () => {
   attractor.updateScroll();
 });
+
 window.addEventListener(
   "wheel",
   (e) => {
@@ -351,7 +351,7 @@ function main() {
   // grid.update(attractor2);
   // attractor2.updateSweep();
   grid.draw();
-  // attractor.draw();
+  // attractor2.draw();
   requestAnimationFrame(main);
 }
 
