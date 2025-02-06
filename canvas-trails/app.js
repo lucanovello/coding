@@ -212,9 +212,13 @@ class Particle {
     this.radius = radius;
     // physics ----------------------
     this.speed = 0.2;
+    this.acceleration = {
+      x: randomNumberFromRange(-this.speed, this.speed),
+      y: randomNumberFromRange(-this.speed, this.speed),
+    };
     this.velocity = {
-      x: randomNumberFromRange(-this.speed, this.speed) * 10,
-      y: randomNumberFromRange(-this.speed, this.speed) * 10,
+      x: this.acceleration.x * 5,
+      y: this.acceleration.y * 5,
     };
 
     // style ------------------------
@@ -226,43 +230,63 @@ class Particle {
   update(attractor) {
     const dx = attractor.x - this.x;
     const dy = attractor.y - this.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
+    const distance =
+      Math.sqrt(dx * dx + dy * dy) > attractor.innerRadius * 50
+        ? Math.sqrt(dx * dx + dy * dy)
+        : attractor.innerRadius * 50;
+    const angle = Math.atan2(dy, dx);
+    const targetX = this.x + Math.cos(angle) * attractor.radius;
+    const targetY = this.y + Math.sin(angle) * attractor.radius;
     // calculate velocity ----------------------
-    if (
-      // attraction ring to the attractor ----------------------
-      distance < attractor.radius - this.radius &&
-      distance > attractor.innerRadius
-    ) {
-      const angle = Math.atan2(dy, dx);
-      const targetX = this.x + Math.cos(angle) * attractor.radius;
-      const targetY = this.y + Math.sin(angle) * attractor.radius;
-      this.velocity.x += (targetX - this.x) * attractor.attraction;
-      this.velocity.y += (targetY - this.y) * attractor.attraction;
-    } else if (
-      // inner circle to the attractor
-      distance < attractor.radius - this.radius &&
-      distance < attractor.innerRadius
-    ) {
-      this.velocity.x +=
-        randomNumberFromRange(-this.speed, this.speed) +
-        attractor.velocity.x -
-        this.velocity.x * attractor.innerDeceleration;
-      this.velocity.y +=
-        randomNumberFromRange(-this.speed, this.speed) +
-        attractor.velocity.y -
-        this.velocity.y * attractor.innerDeceleration;
-    } else {
-      // not in the attractor radius ----------------------
-      this.velocity.x +=
-        randomNumberFromRange(-this.speed, this.speed) +
-        attractor.velocity.x -
-        this.velocity.x * attractor.deceleration;
-      this.velocity.y +=
-        randomNumberFromRange(-this.speed, this.speed) +
-        attractor.velocity.y -
-        this.velocity.y * attractor.deceleration;
-    }
+    // if (
+    //   // attraction ring to the attractor ----------------------
+    //   distance < attractor.radius - this.radius &&
+    //   distance > attractor.innerRadius
+    // ) {
+    //   this.acceleration.x = (targetX - this.x) * attractor.attraction;
+    //   this.acceleration.y = (targetY - this.y) * attractor.attraction;
+    //   this.velocity.x += this.acceleration.x;
+    //   this.velocity.y += this.acceleration.y;
+    // } else
+    // if (
+    //   // inner circle to the attractor
+    //   distance < attractor.radius - this.radius &&
+    //   distance < attractor.innerRadius
+    // ) {
+    //   // acc ----
+    //   this.acceleration.x = randomNumberFromRange(-this.speed, this.speed);
+    //   this.acceleration.y = randomNumberFromRange(-this.speed, this.speed);
+    //   // vel ----
+    //   this.velocity.x +=
+    //     this.acceleration.x +
+    //     attractor.velocity.x -
+    //     this.velocity.x * attractor.innerDeceleration;
+    //   this.velocity.y +=
+    //     this.acceleration.y +
+    //     attractor.velocity.y -
+    //     this.velocity.y * attractor.innerDeceleration;
+    // } else {
+    // not in the attractor radius ----------------------
+    // acc ----
+    this.acceleration.x =
+      ((targetX - this.x) * attractor.attraction) /
+      (((distance * distance) /
+        Math.hypot(window.innerWidth, window.innerHeight)) *
+        (distance / Math.hypot(window.innerWidth, window.innerHeight)));
+    this.acceleration.y =
+      ((targetY - this.y) * attractor.attraction) /
+      ((distance / Math.hypot(window.innerWidth, window.innerHeight)) *
+        (distance / Math.hypot(window.innerWidth, window.innerHeight)));
+    // vel ----
+    this.velocity.x +=
+      this.acceleration.x +
+      attractor.velocity.x -
+      this.velocity.x * attractor.deceleration;
+    this.velocity.y +=
+      this.acceleration.y +
+      attractor.velocity.y -
+      this.velocity.y * attractor.deceleration;
+    // }
 
     // move the cell ----------------------
     this.x += this.velocity.x;

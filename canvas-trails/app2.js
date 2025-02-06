@@ -21,11 +21,11 @@ class Attractor {
       x: 0,
       y: 0,
     };
-    this.initAttraction = this.speed * 0.0003;
+    this.initAttraction = this.speed * 0.00003;
     this.attraction = this.initAttraction;
     this.attractionMultiplier = 5;
     this.deceleration = 0.01;
-    this.initInnerDeceleration = this.deceleration * 2;
+    this.initInnerDeceleration = this.deceleration;
     this.innerDeceleration = this.initInnerDeceleration;
     this.innerDecelerationMultiplier = 5;
     this.scrollSpeed = 2;
@@ -134,20 +134,23 @@ class Attractor {
   }
   draw() {
     ctx.fillStyle = "hsla(200, 0%, 0%, 0.5)";
-    ctx.strokeStyle = "hsla(200, 0%, 100%, 1)";
+    ctx.strokeStyle = "hsla(200, 0%, 100%, 0.3)";
     ctx.lineWidth = 1;
-    // Outer Radius
+
+    // Outer Radius ----------------------
     // ctx.beginPath();
     // ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     // ctx.stroke();
     // ctx.closePath();
-    // Inner Radius
-    // ctx.beginPath();
-    // ctx.arc(this.x, this.y, this.innerRadius, 0, Math.PI * 2);
-    // ctx.stroke();
+
+    // Inner Radius ----------------------
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.innerRadius, 0, Math.PI * 2);
+    ctx.stroke();
     // ctx.fill();
-    // ctx.closePath();
-    // Mouse Position
+    ctx.closePath();
+
+    // Mouse Position ----------------------
     ctx.beginPath();
     ctx.arc(this.x, this.y, 4, 0, Math.PI * 2);
     ctx.stroke();
@@ -161,16 +164,15 @@ class Grid {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     this.maxLength = Math.hypot(this.width, this.height);
-    this.totalParticles = this.maxLength;
+    this.particleCount = 1000;
     this.particles = [];
-    this.minSizeRange = [0.5, 1];
-    this.maxSizeRange = [2, 3];
-    this.timer = 0;
+    this.minSizeRange = [1, 4];
+    this.maxSizeRange = [5, 11];
     this.createCells();
   }
   createCells() {
     this.particles = [];
-    for (let i = 0; i < this.totalParticles; i++) {
+    for (let i = 0; i < this.particleCount; i++) {
       const radius =
         Math.random() < 0.99
           ? randomNumberFromRange(this.minSizeRange[0], this.minSizeRange[1])
@@ -185,12 +187,9 @@ class Grid {
     }
   }
   update(attractor) {
-    // attractor.innerRadius += Math.cos(this.timer) * 0.5;
-    // attractor.innerDeceleration += Math.sin(this.timer) * 0.00001;
     this.particles.forEach((cell) => {
       cell.update(attractor);
     });
-    // this.timer += 0.02;
   }
   draw() {
     ctx.clearRect(0, 0, this.width, this.height);
@@ -211,16 +210,22 @@ class Particle {
     this.y = y;
     this.radius = radius;
     // physics ----------------------
-    this.speed = 0.2;
-    this.velocity = {
-      x: randomNumberFromRange(-this.speed, this.speed) * 10,
-      y: randomNumberFromRange(-this.speed, this.speed) * 10,
+    this.speed = 0.03;
+    this.acceleration = {
+      x: randomNumberFromRange(-this.speed, this.speed),
+      y: randomNumberFromRange(-this.speed, this.speed),
     };
+    this.velocity = {
+      x: this.acceleration.x * 100,
+      y: this.acceleration.y * 100,
+    };
+    this.isInner = false;
+    this.beenInner = this.isInner;
 
     // style ------------------------
-    this.hue = randomNumberFromRange(20, 45);
+    this.hue = randomNumberFromRange(30, 50);
     this.saturation = randomNumberFromRange(80, 100);
-    this.brightness = randomNumberFromRange(50, 70);
+    this.brightness = randomNumberFromRange(40, 60);
     this.counter = Math.random() * 1000;
   }
   update(attractor) {
@@ -228,12 +233,20 @@ class Particle {
     const dy = attractor.y - this.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
+    // this == grid.particles[0] && console.log(distance);
+
     // calculate velocity ----------------------
     if (
       // attraction ring to the attractor ----------------------
       distance < attractor.radius - this.radius &&
       distance > attractor.innerRadius
     ) {
+      if (
+        distance < attractor.radius - this.radius * 2 &&
+        distance > attractor.innerRadius + this.radius * 2
+      ) {
+        this.isInner = false;
+      }
       const angle = Math.atan2(dy, dx);
       const targetX = this.x + Math.cos(angle) * attractor.radius;
       const targetY = this.y + Math.sin(angle) * attractor.radius;
@@ -244,6 +257,8 @@ class Particle {
       distance < attractor.radius - this.radius &&
       distance < attractor.innerRadius
     ) {
+      this.beenInner = true;
+      this.isInner = true;
       this.velocity.x +=
         randomNumberFromRange(-this.speed, this.speed) +
         attractor.velocity.x -
@@ -254,12 +269,26 @@ class Particle {
         this.velocity.y * attractor.innerDeceleration;
     } else {
       // not in the attractor radius ----------------------
+      this.isInner = false;
+      const angle = Math.atan2(dy, dx);
+      const targetX = this.x + Math.cos(angle) * attractor.radius;
+      const targetY = this.y + Math.sin(angle) * attractor.radius;
+      this.acceleration.x +=
+        ((targetX - this.x) * attractor.attraction -
+          this.acceleration.x * 0.1) /
+        ((distance / Math.hypot(ctx.canvas.width, ctx.canvas.height)) * 5);
+      this.acceleration.y +=
+        ((targetY - this.y) * attractor.attraction -
+          this.acceleration.y * 0.1) /
+        (distance / Math.hypot(ctx.canvas.width, ctx.canvas.height));
       this.velocity.x +=
-        randomNumberFromRange(-this.speed, this.speed) +
+        this.acceleration.x +
+        // randomNumberFromRange(-this.speed, this.speed) +
         attractor.velocity.x -
         this.velocity.x * attractor.deceleration;
       this.velocity.y +=
-        randomNumberFromRange(-this.speed, this.speed) +
+        this.acceleration.y +
+        // randomNumberFromRange(-this.speed, this.speed) +
         attractor.velocity.y -
         this.velocity.y * attractor.deceleration;
     }
@@ -274,6 +303,12 @@ class Particle {
 
     // update the counter ----------------------
     this.counter += 0.005;
+
+    // store the previous position ----------------------
+    // if (this.prevPos.length > this.prevPosCount - 1) {
+    //   this.prevPos.shift();
+    // }
+    // this.prevPos.push({ x: this.x, y: this.y });
   }
   screenWrapCollision() {
     if (this.x < -this.radius * 2) {
@@ -292,22 +327,25 @@ class Particle {
   bounceCollision() {
     if (this.x < this.radius) {
       this.x = this.radius;
+      this.acceleration.x *= -1;
       this.velocity.x *= -1;
     }
     if (this.x > window.innerWidth - this.radius) {
       this.x = window.innerWidth - this.radius;
+      this.acceleration.x *= -1;
       this.velocity.x *= -1;
     }
     if (this.y < this.radius) {
       this.y = this.radius;
+      this.acceleration.y *= -1;
       this.velocity.y *= -1;
     }
     if (this.y > window.innerHeight - this.radius) {
       this.y = window.innerHeight - this.radius;
+      this.acceleration.y *= -1;
       this.velocity.y *= -1;
     }
   }
-
   draw() {
     ctx.beginPath();
     ctx.fillStyle = `hsl(${this.hue}, ${this.saturation}%, ${this.brightness}%)`;
@@ -317,13 +355,7 @@ class Particle {
     //   this.radius,
     //   this.radius
     // );
-    ctx.arc(
-      this.x,
-      this.y,
-      this.radius * (Math.sin(this.counter) + 1.2) * 0.8,
-      0,
-      Math.PI * 2
-    );
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     ctx.fill();
     ctx.closePath();
   }
@@ -348,7 +380,6 @@ window.addEventListener("mousemove", (e) => {
 });
 
 window.addEventListener("mousedown", (e) => {
-  console.log(e);
   if (e.button === 0) {
     attractor.innerDeceleration =
       attractor.initInnerDeceleration * attractor.attractionMultiplier;
@@ -390,6 +421,9 @@ function main() {
   // attractor2.updateSweep();
   grid.draw();
   attractor.draw();
+
+  // console.log(grid.particles[0].distance);
+
   requestAnimationFrame(main);
 }
 
