@@ -19,6 +19,7 @@ const projectsContainer = document.getElementById("projects-container");
 const contactContainer = document.getElementById("contact-container");
 
 const contactForm = document.getElementById("form");
+const submitButton = document.getElementById("submit-button");
 const contactSuccessMessage = document.getElementById(
   "contact-success-message"
 );
@@ -557,39 +558,71 @@ projectsList.addEventListener(
   (e) => (page.projectsWaiting = false)
 );
 
-//  Contact form send to server and respond with success or error
-contactForm.addEventListener("submit", (e) => {
-  e.preventDefault(); // Prevent the form from being submitted
+// contactForm.addEventListener("submit", (e) => {
+//   e.preventDefault();
+//   grecaptcha.enterprise.ready(async () => {
+//     const token = await grecaptcha.enterprise
+//       .execute("6Le3Dv0qAAAAANr0jELhpIlmwcGFD308ayMaIDBV", { action: "LOGIN" })
+//       .then((token) => {
+//         document.getElementById("recaptchaResponse").value = token;
 
-  // Get the form data
-  const formData = new FormData(contactForm);
+//         // Proceed to submit the form
+//         const formData = new FormData(contactForm);
 
-  // Send the form data to the server using an XMLHttpRequest
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "sendmail.php");
-  xhr.onload = function () {
-    if (xhr.getResponseHeader("X-Contact-Form-Status") === "success") {
-      // Display a success message
-      contactSuccessMessage.innerHTML =
-        "<span>&#10003;</span> Thank you! Your message has been sent";
-      contactSuccessMessage.classList = "contact-success-message-show";
-      setTimeout(() => {
-        contactSuccessMessage.classList = "contact-success-message-hide";
-      }, 2000);
-      document.querySelector(".contact-name").value = "";
-      document.querySelector(".contact-email").value = "";
-      document.querySelector(".contact-subject").value = "";
-      document.querySelector(".contact-message").value = "";
-    } else {
-      contactSuccessMessage.innerHTML =
-        "<span>&#9447;</span> Sorry there was an error, please try again later";
-      contactSuccessMessage.classList = "contact-success-message-show";
-      setTimeout(() => {
-        contactSuccessMessage.classList = "contact-success-message-hide";
-      }, 2000);
-    }
-  };
-  xhr.send(formData);
+//         const xhr = new XMLHttpRequest();
+//         xhr.open("POST", "sendmail.php");
+//         xhr.onload = function () {
+//           if (xhr.getResponseHeader("X-Contact-Form-Status") === "success") {
+//             contactSuccessMessage.innerHTML =
+//               "<span>&#10003;</span> Thank you! Your message has been sent";
+//             contactSuccessMessage.classList = "contact-success-message-show";
+//           } else {
+//             contactSuccessMessage.innerHTML =
+//               "<span>&#9447;</span> Sorry, there was an error. Please try again later.";
+//             contactSuccessMessage.classList = "contact-success-message-show";
+//           }
+//         };
+//         xhr.send(formData);
+//       });
+//   });
+// });
+
+submitButton.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  grecaptcha.enterprise.ready(async () => {
+    const token = await grecaptcha.enterprise.execute(
+      "6Le3Dv0qAAAAANr0jELhpIlmwcGFD308ayMaIDBV",
+      { action: "contact_form" }
+    );
+
+    // Append reCAPTCHA token to the form data
+    const formData = new FormData(contactForm);
+    formData.append("recaptcha_token", token);
+
+    // Send form data to the server
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "sendmail.php");
+    xhr.onload = function () {
+      if (xhr.getResponseHeader("X-Contact-Form-Status") === "success") {
+        contactSuccessMessage.innerHTML =
+          "<span>&#10003;</span> Thank you! Your message has been sent";
+        contactSuccessMessage.classList = "contact-success-message-show";
+        setTimeout(() => {
+          contactSuccessMessage.classList = "contact-success-message-hide";
+        }, 2000);
+        contactForm.reset();
+      } else {
+        contactSuccessMessage.innerHTML =
+          "<span>&#9447;</span> Sorry, there was an error. Please try again.";
+        contactSuccessMessage.classList = "contact-success-message-show";
+        setTimeout(() => {
+          contactSuccessMessage.classList = "contact-success-message-hide";
+        }, 2000);
+      }
+    };
+    xhr.send(formData);
+  });
 });
 
 function initPage() {
